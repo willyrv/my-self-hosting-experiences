@@ -64,6 +64,49 @@ if [[ -f README.md ]]; then
   done
 fi
 
+if ! python3 - <<'PY'
+from pathlib import Path
+from urllib.parse import unquote
+import re
+import subprocess
+
+result = subprocess.run(
+    ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.md"],
+    check=True,
+    capture_output=True,
+    text=True,
+)
+markdown_files = [
+    Path(path)
+    for path in result.stdout.splitlines()
+    if Path(path).parts[:2] != ("docs", "superpowers")
+]
+
+link_pattern = re.compile(r"\[[^\]]*\]\((<[^>]+>|[^)\s]+)")
+broken_links = []
+
+for markdown_file in markdown_files:
+    text = markdown_file.read_text(encoding="utf-8")
+    for match in link_pattern.finditer(text):
+        link = match.group(1).strip("<>")
+        if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", link) or link.startswith(("/", "#")):
+            continue
+
+        path = unquote(link.split("#", 1)[0].split("?", 1)[0])
+        if path and not (markdown_file.parent / path).exists():
+            broken_links.append(f"{markdown_file}: {link}")
+
+if broken_links:
+    print("BROKEN LINKS:")
+    print("\n".join(broken_links))
+    raise SystemExit(1)
+
+print(f"link-check: OK ({len(markdown_files)} markdown files)")
+PY
+then
+  missing=1
+fi
+
 if [[ "$missing" -ne 0 ]]; then
   echo "verify-docs: FAILED"
   exit 1

@@ -119,18 +119,18 @@ Documentation for a hybrid K3s homelab on two or three machines: public handbook
 
 ## Start here
 
-- [Architecture overview](../../architecture/overview.md) — recommended hybrid design
-- [Implementation phases](../../guides/phase-01-base-os.md) — build order
-- [Experiences log](../../experiences/README.md) — decisions and experiments
+- [Architecture overview](architecture/overview.md) — recommended hybrid design
+- [Implementation phases](guides/phase-01-base-os.md) — build order
+- [Experiences log](experiences/README.md) — decisions and experiments
 
 ## Browse
 
 | Section | Purpose |
 |---------|---------|
-| [Architecture](../../architecture/overview.md) | Why and design decisions |
-| [Guides](../../guides/phase-01-base-os.md) | How to build in phases |
-| [Apps](../../apps/openproject.md) | Per-service notes |
-| [Experiences](../../experiences/README.md) | Dated personal log |
+| [Architecture](architecture/overview.md) | Why and design decisions |
+| [Guides](guides/phase-01-base-os.md) | How to build in phases |
+| [Apps](apps/openproject.md) | Per-service notes |
+| [Experiences](experiences/README.md) | Dated personal log |
 
 ## Docs site later
 
@@ -374,13 +374,13 @@ This repository documents a growing self-hosting stack. n8n is not required for 
 
 - Choose Helm chart vs Compose deployment.
 - Define persistent volume strategy for n8n data.
-- Document webhook exposure policy and credential storage (SOPS), consistent with [GitOps layout](../../architecture/gitops-layout.md).
+- Document webhook exposure policy and credential storage (SOPS), consistent with [GitOps layout](../architecture/gitops-layout.md).
 - Add backup/restore notes before relying on production workflows.
 
 ## See also
 
-- [Phase 4 — low-risk apps](../../guides/phase-04-low-risk-apps.md)
-- [Phase 7 — operations](../../guides/phase-07-operations.md)
+- [Phase 4 — low-risk apps](../guides/phase-04-low-risk-apps.md)
+- [Phase 7 — operations](../guides/phase-07-operations.md)
 - Upstream: https://github.com/n8n-io/n8n
 ```
 
@@ -442,8 +442,8 @@ Include previous/next navigation, for example at the bottom of Phase 3:
 ```markdown
 ## Navigation
 
-- Previous: [Phase 2 — VPN access](../../guides/phase-02-vpn-access.md)
-- Next: [Phase 4 — low-risk apps](../../guides/phase-04-low-risk-apps.md)
+- Previous: [Phase 2 — VPN access](phase-02-vpn-access.md)
+- Next: [Phase 4 — low-risk apps](phase-04-low-risk-apps.md)
 ```
 
 Phase 1 has no previous link; Phase 7 has no next link.
@@ -488,7 +488,7 @@ Dated notes from building and operating this self-hosting lab.
 
 ## Entries
 
-- [2026-07-18 — Architecture decision: hybrid K3s](../../experiences/2026-07-18-architecture-decision.md)
+- [2026-07-18 — Architecture decision: hybrid K3s](2026-07-18-architecture-decision.md)
 ```
 
 - [ ] **Step 2: Create `docs/experiences/2026-07-18-architecture-decision.md`**
@@ -525,13 +525,13 @@ Central principle: use Kubernetes to manage applications, but do not make Kubern
 - Documentation is organized as architecture (why), phase guides (how), and app notes (depth).
 - WireGuard stays on the host so cluster breakage does not remove remote admin access.
 - Initial storage favors local PVs / NFS over rushing into Longhorn for multi-terabyte media.
-- This docs repository does not yet hold Flux manifests; see [GitOps layout](../../architecture/gitops-layout.md).
+- This docs repository does not yet hold Flux manifests; see [GitOps layout](../architecture/gitops-layout.md).
 
 ## See also
 
-- [Architecture overview](../../architecture/overview.md)
-- [Architecture options](../../architecture/options.md)
-- Original working note: [`self_hosting_k3s_architecture.md`](../../../self_hosting_k3s_architecture.md)
+- [Architecture overview](../architecture/overview.md)
+- [Architecture options](../architecture/options.md)
+- Original working note: [`self_hosting_k3s_architecture.md`](../../self_hosting_k3s_architecture.md)
 ```
 
 - [ ] **Step 3: Commit experiences log**
@@ -580,35 +580,35 @@ Recommended shape of this lab:
 
 ## Documentation
 
-- [Docs home](../../../docs/index.md)
-- [Architecture overview](../../../docs/architecture/overview.md)
-- [Phase 1 — base OS](../../../docs/guides/phase-01-base-os.md)
-- [Experiences log](../../../docs/experiences/README.md)
-- Historical working note: [self_hosting_k3s_architecture.md](../../../self_hosting_k3s_architecture.md)
+- [Docs home](docs/index.md)
+- [Architecture overview](docs/architecture/overview.md)
+- [Phase 1 — base OS](docs/guides/phase-01-base-os.md)
+- [Experiences log](docs/experiences/README.md)
+- Historical working note: [self_hosting_k3s_architecture.md](self_hosting_k3s_architecture.md)
 
 ### Architecture
 
-- [Overview](../../../docs/architecture/overview.md)
-- [Options compared](../../../docs/architecture/options.md)
-- [Machine roles](../../../docs/architecture/machine-roles.md)
-- [Storage](../../../docs/architecture/storage.md)
-- [Networking](../../../docs/architecture/networking.md)
-- [Authentication](../../../docs/architecture/auth.md)
-- [Monitoring](../../../docs/architecture/monitoring.md)
-- [Backups](../../../docs/architecture/backups.md)
-- [Resources](../../../docs/architecture/resources.md)
-- [GitOps layout (separate repo later)](../../../docs/architecture/gitops-layout.md)
+- [Overview](docs/architecture/overview.md)
+- [Options compared](docs/architecture/options.md)
+- [Machine roles](docs/architecture/machine-roles.md)
+- [Storage](docs/architecture/storage.md)
+- [Networking](docs/architecture/networking.md)
+- [Authentication](docs/architecture/auth.md)
+- [Monitoring](docs/architecture/monitoring.md)
+- [Backups](docs/architecture/backups.md)
+- [Resources](docs/architecture/resources.md)
+- [GitOps layout (separate repo later)](docs/architecture/gitops-layout.md)
 
 ### Apps
 
-- [OpenProject](../../../docs/apps/openproject.md)
-- [Jellyfin](../../../docs/apps/jellyfin.md)
-- [Cloud (Nextcloud / Seafile)](../../../docs/apps/cloud-nextcloud-seafile.md)
-- [WireGuard](../../../docs/apps/wireguard.md)
-- [marimo](../../../docs/apps/marimo.md)
-- [JupyterHub](../../../docs/apps/jupyterhub.md)
-- [GitLab or Forgejo/Gitea](../../../docs/apps/gitlab-or-forgejo.md)
-- [n8n](../../../docs/apps/n8n.md) (planned)
+- [OpenProject](docs/apps/openproject.md)
+- [Jellyfin](docs/apps/jellyfin.md)
+- [Cloud (Nextcloud / Seafile)](docs/apps/cloud-nextcloud-seafile.md)
+- [WireGuard](docs/apps/wireguard.md)
+- [marimo](docs/apps/marimo.md)
+- [JupyterHub](docs/apps/jupyterhub.md)
+- [GitLab or Forgejo/Gitea](docs/apps/gitlab-or-forgejo.md)
+- [n8n](docs/apps/n8n.md) (planned)
 
 ## Useful resources
 
@@ -625,7 +625,7 @@ Content under `docs/` is arranged so a static site generator such as MkDocs Mate
 
 ## License
 
-Documentation is licensed under [CC BY 4.0](../../../LICENSE).
+Documentation is licensed under [CC BY 4.0](LICENSE).
 ```
 
 - [ ] **Step 2: Run the verification script and expect success**
