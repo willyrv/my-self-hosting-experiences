@@ -39,5 +39,6 @@ Monitoring should verify the backup process, not merely whether the cluster is r
 - [Networking and exposure](networking.md)
 - [Backup design](backups.md)
 - [Resource planning](resources.md)
+- [OpenProject](../apps/openproject.md)
 - [Phase 4 — low-risk apps](../guides/phase-04-low-risk-apps.md)
 - [Phase 7 — operations](../guides/phase-07-operations.md)
