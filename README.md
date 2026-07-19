@@ -10,7 +10,7 @@ Recommended shape of this lab:
 - Three-node K3s control plane (or one server + agent if only two machines)
 - Traefik + cert-manager; MetalLB or K3s ServiceLB
 - Apps in-cluster: OpenProject, JupyterHub, marimo, Uptime Kuma; monitoring/identity later
-- Outside or pinned: WireGuard on the host, Jellyfin on the media/GPU node, GitLab Omnibus or a lighter forge
+- Outside or pinned: Headscale (control plane on OVH VPS; home PC as subnet router), Jellyfin on the media/GPU node, GitLab Omnibus or a lighter forge
 - Storage: local SSDs first; NFS for shared notebooks/files; Longhorn only where replication is worth the cost
 - Operations later: Flux (separate repo), SOPS + age, Restic/Borg, PostgreSQL dumps, etcd snapshots, off-site backups
 
@@ -42,7 +42,8 @@ Recommended shape of this lab:
 - [OpenProject](docs/apps/openproject.md)
 - [Jellyfin](docs/apps/jellyfin.md)
 - [Cloud (Nextcloud / Seafile)](docs/apps/cloud-nextcloud-seafile.md)
-- [WireGuard](docs/apps/wireguard.md)
+- [Headscale](docs/apps/headscale.md)
+- [WireGuard](docs/apps/wireguard.md) (alternative)
 - [marimo](docs/apps/marimo.md)
 - [JupyterHub](docs/apps/jupyterhub.md)
 - [GitLab or Forgejo/Gitea](docs/apps/gitlab-or-forgejo.md)

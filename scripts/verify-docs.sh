@@ -32,12 +32,14 @@ required_files=(
   docs/apps/jellyfin.md
   docs/apps/cloud-nextcloud-seafile.md
   docs/apps/wireguard.md
+  docs/apps/headscale.md
   docs/apps/marimo.md
   docs/apps/jupyterhub.md
   docs/apps/gitlab-or-forgejo.md
   docs/apps/n8n.md
   docs/experiences/README.md
   docs/experiences/2026-07-18-architecture-decision.md
+  docs/experiences/2026-07-19-headscale-ovh-cgnat.md
 )
 
 missing=0

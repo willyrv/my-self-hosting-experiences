@@ -1,6 +1,6 @@
 # WireGuard
 
-Status: Recommended
+Status: Alternative
 
 ## Purpose
 
@@ -8,12 +8,12 @@ WireGuard provides conventional VPN access to the homelab network and private se
 
 ## Placement
 
-Run WireGuard directly on the infrastructure host rather than inside Kubernetes:
+If used, run WireGuard directly on a host rather than inside Kubernetes:
 
 ```text
 Internet
    │
-Router UDP port forwarding
+Router UDP port forwarding (requires a real public IPv4 — not CGNAT)
    │
 WireGuard on infrastructure node
    │
@@ -24,20 +24,20 @@ Keeping the VPN outside K3s ensures that cluster failures do not also remove rem
 
 ## WireGuard or Headscale
 
-Begin with plain WireGuard for simplicity and complete control. Headscale, a self-hosted implementation of the Tailscale control server, is a later alternative when you need easier mesh networking among laptops, servers, phones, and remote locations.
+This lab chose **[Headscale](headscale.md)** (Tailscale clients + self-hosted control server) after discovering **IPv4 CGNAT** on the domestic ISP line. The control plane runs on an OVH VPS behind Nginx; the home PC acts as a subnet router for `192.168.1.0/24`.
+
+Plain WireGuard remains a valid alternative when:
+
+- the ISP provides inbound port forwarding on a public IPv4; and
+- a small, manually managed peer set is enough.
 
 ## Backups and warnings
 
-Back up the host configuration and private keys in encrypted storage. Do not commit unencrypted private keys to this repository, and keep the router's UDP forwarding rule limited to the WireGuard endpoint.
-
-## Planned
-
-- Validate host installation and firewall rules on the selected Linux distribution.
-- Document peer enrollment, key rotation, routing, and recovery.
-- Test access to private services while K3s is stopped.
+Back up host configuration and private keys in encrypted storage. Do not commit unencrypted private keys to this repository. On CGNAT, do not assume home router port forwards will work.
 
 ## See also
 
+- [Headscale](headscale.md) — current Phase 2 VPN choice
 - [Networking and exposure](../architecture/networking.md)
-- [Machine roles](../architecture/machine-roles.md)
 - [Phase 2 — VPN access](../guides/phase-02-vpn-access.md)
+- [Experience: Headscale on OVH after CGNAT](../experiences/2026-07-19-headscale-ovh-cgnat.md)
