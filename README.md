@@ -43,6 +43,7 @@ Recommended shape of this lab:
 - [Jellyfin](docs/apps/jellyfin.md)
 - [Cloud (Nextcloud / Seafile)](docs/apps/cloud-nextcloud-seafile.md)
 - [Headscale](docs/apps/headscale.md)
+- [Uptime Kuma](docs/apps/uptime-kuma.md)
 - [WireGuard](docs/apps/wireguard.md) (alternative)
 - [marimo](docs/apps/marimo.md)
 - [JupyterHub](docs/apps/jupyterhub.md)

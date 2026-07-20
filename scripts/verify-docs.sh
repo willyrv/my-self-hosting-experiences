@@ -33,6 +33,7 @@ required_files=(
   docs/apps/cloud-nextcloud-seafile.md
   docs/apps/wireguard.md
   docs/apps/headscale.md
+  docs/apps/uptime-kuma.md
   docs/apps/marimo.md
   docs/apps/jupyterhub.md
   docs/apps/gitlab-or-forgejo.md
@@ -40,6 +41,7 @@ required_files=(
   docs/experiences/README.md
   docs/experiences/2026-07-18-architecture-decision.md
   docs/experiences/2026-07-19-headscale-ovh-cgnat.md
+  docs/experiences/2026-07-20-uptime-kuma-vpn-monitoring.md
 )
 
 missing=0

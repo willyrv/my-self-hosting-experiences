@@ -16,6 +16,15 @@ Uptime Kuma      → external-style availability checks
 
 Keep monitoring lightweight initially. Full Prometheus retention can consume considerable storage.
 
+### VPN path (validated early)
+
+Before the full Prometheus stack, this lab uses **[Uptime Kuma](../apps/uptime-kuma.md)** on the OVH VPS (Docker + Nginx, public `status.willyrv.com`) to watch:
+
+- Headscale: `https://headscale.willyrv.com/health`
+- Home Tailscale subnet router: ping/TCP to the home node’s Tailscale IP from a VPS probe client
+
+Abuse signals (Nginx scanners, Headscale auth failures) are handled with CrowdSec and a journal watcher alongside Kuma — see the [Uptime Kuma experience note](../experiences/2026-07-20-uptime-kuma-vpn-monitoring.md).
+
 ## Minimum coverage
 
 Monitor:
@@ -32,10 +41,12 @@ Monitor:
 - Internet connectivity
 - RAID, ZFS, or Btrfs health where applicable
 
-Monitoring should verify the backup process, not merely whether the cluster is running. Keep administrative dashboards under the [VPN-only exposure policy](networking.md).
+Monitoring should verify the backup process, not merely whether the cluster is running. Prefer VPN-only for heavy admin UIs (Grafana, etc.). **Uptime Kuma** is an intentional exception: it stays publicly reachable with a strong admin password and edge protection.
 
 ## See also
 
+- [Uptime Kuma](../apps/uptime-kuma.md)
+- [Headscale](../apps/headscale.md)
 - [Networking and exposure](networking.md)
 - [Backup design](backups.md)
 - [Resource planning](resources.md)

@@ -8,7 +8,7 @@ Prove repeatable application deployment, routing, TLS, persistence, and exposure
 
 ## Checklist
 
-- Deploy Uptime Kuma.
+- Deploy Uptime Kuma (on the OVH VPS for Headscale/home-bridge checks; see [Uptime Kuma](../apps/uptime-kuma.md)).
 - Deploy a private marimo editing workspace.
 - Deploy a separate restricted marimo application or a simple test web application.
 - Exercise public, VPN-only, and LAN-only routing as applicable.
@@ -18,7 +18,7 @@ Prove repeatable application deployment, routing, TLS, persistence, and exposure
 
 ## Details
 
-Use Uptime Kuma for external-style availability checks and a simple web application for ingress and TLS testing. Monitoring can remain lightweight here; the broader metrics, logs, and alerting stack belongs in Phase 7.
+Use Uptime Kuma for external-style availability checks. This lab’s first validated deployment is Compose + Nginx on the OVH VPS watching Headscale and the home Tailscale bridge — not necessarily inside the future K3s cluster. A simple web application still helps prove cluster ingress and TLS when Phase 3 is live. Broader metrics, logs, and alerting belong in Phase 7.
 
 Separate marimo's editable and published modes. Place the persistent editing workspace on the application/compute node and keep it VPN-only. Deploy published applications independently with their own dependency images and explicit exposure policy. Do not expose an editable notebook server directly to the Internet.
 
@@ -37,6 +37,7 @@ n8n is an optional later automation service after these patterns are proven. Its
 
 ## See also
 
+- [Uptime Kuma](../apps/uptime-kuma.md)
 - [marimo](../apps/marimo.md)
 - [Monitoring](../architecture/monitoring.md)
 - [Networking and exposure](../architecture/networking.md)

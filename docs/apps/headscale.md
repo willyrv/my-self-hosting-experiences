@@ -255,10 +255,16 @@ Expected: home subnet router online; LAN hosts reachable.
 - Cloudflare must stay DNS-only for `headscale.willyrv.com`.
 - gRPC admin stays on localhost.
 
+## Monitoring
+
+Availability of this control plane and the home subnet router is tracked with [Uptime Kuma](uptime-kuma.md) at `https://status.willyrv.com` (HTTPS check on `/health`, Tailscale ping to the home node from the VPS).
+
 ## See also
 
+- [Uptime Kuma](uptime-kuma.md)
 - [Phase 2 — VPN access](../guides/phase-02-vpn-access.md)
 - [Networking](../architecture/networking.md)
 - [WireGuard](wireguard.md) (alternative / fallback)
 - [Experience: Headscale on OVH after CGNAT](../experiences/2026-07-19-headscale-ovh-cgnat.md)
+- [Experience: Uptime Kuma VPN monitoring](../experiences/2026-07-20-uptime-kuma-vpn-monitoring.md)
 - Upstream: https://headscale.net/
