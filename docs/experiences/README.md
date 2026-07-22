@@ -11,6 +11,7 @@ Dated notes from building and operating this self-hosting lab.
 
 ## Entries
 
+- [2026-07-22 — JupyterHub teaching stack + Cloudflare Tunnel](2026-07-22-jupyterhub-cloudflare-tunnel.md)
 - [2026-07-22 — OpenProject on k3s + Cloudflare Tunnel](2026-07-22-openproject-cloudflare-tunnel.md)
 - [2026-07-20 — Uptime Kuma VPN monitoring](2026-07-20-uptime-kuma-vpn-monitoring.md)
 - [2026-07-19 — Headscale on OVH after CGNAT](2026-07-19-headscale-ovh-cgnat.md)

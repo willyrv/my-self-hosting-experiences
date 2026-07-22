@@ -43,6 +43,7 @@ required_files=(
   docs/experiences/2026-07-19-headscale-ovh-cgnat.md
   docs/experiences/2026-07-20-uptime-kuma-vpn-monitoring.md
   docs/experiences/2026-07-22-openproject-cloudflare-tunnel.md
+  docs/experiences/2026-07-22-jupyterhub-cloudflare-tunnel.md
 )
 
 missing=0

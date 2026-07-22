@@ -37,6 +37,7 @@ Keep notebook source in version control where practical. Back up persistent work
 
 ## See also
 
+- [JupyterHub](jupyterhub.md) — multi-user teaching / isolated homes (preferred for a class)
 - [Networking and exposure](../architecture/networking.md)
 - [Machine roles](../architecture/machine-roles.md)
 - [Phase 4 — low-risk apps](../guides/phase-04-low-risk-apps.md)
