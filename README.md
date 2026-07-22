@@ -9,8 +9,8 @@ Recommended shape of this lab:
 - Three Debian/Ubuntu machines with role labels (infrastructure, compute, storage/media)
 - Three-node K3s control plane (or one server + agent if only two machines)
 - Traefik + cert-manager; MetalLB or K3s ServiceLB
-- Apps in-cluster: OpenProject, JupyterHub, marimo, Uptime Kuma; monitoring/identity later
-- Outside or pinned: Headscale (control plane on OVH VPS; home PC as subnet router), Jellyfin on the media/GPU node, GitLab Omnibus or a lighter forge
+- Apps in-cluster: OpenProject (home k3s + Cloudflare Tunnel/Access), JupyterHub, marimo; monitoring/identity later
+- Outside or pinned: Headscale (control plane on OVH VPS; home PC as subnet router), Uptime Kuma on OVH, Jellyfin on the media/GPU node, GitLab Omnibus or a lighter forge
 - Storage: local SSDs first; NFS for shared notebooks/files; Longhorn only where replication is worth the cost
 - Operations later: Flux (separate repo), SOPS + age, Restic/Borg, PostgreSQL dumps, etcd snapshots, off-site backups
 

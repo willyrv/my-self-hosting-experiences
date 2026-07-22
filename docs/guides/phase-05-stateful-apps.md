@@ -18,7 +18,7 @@ Introduce important persistent workloads one at a time, with storage, backup, an
 
 ## Details
 
-Deploy OpenProject on the application/compute node. Keep PostgreSQL on persistent SSD storage, give attachments their own persistent volume, and expose only the web interface. Back up both logical PostgreSQL dumps and volume data, including attachments.
+Deploy OpenProject on the application/compute node (validated: single-node k3s on a home mini PC). Keep PostgreSQL on persistent SSD storage, give attachments their own persistent volume, and expose the web UI carefully: with **IPv4 CGNAT**, use **Cloudflare Tunnel + Access** for `projects.willyrv.com` rather than home port forwards. Keep LAN/VPN reachability via the Headscale subnet router. See [OpenProject](../apps/openproject.md). Back up both logical PostgreSQL dumps and volume data, including attachments.
 
 Use JupyterHub when several users or isolated environments justify it; a single trusted user may only need JupyterLab. Keep JupyterHub VPN-only, set CPU and memory guarantees and limits, and separate persistent home directories from disposable computation. NFS, local SSD, or Longhorn can hold homes according to the lab's availability and performance needs.
 
