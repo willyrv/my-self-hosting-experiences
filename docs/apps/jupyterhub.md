@@ -12,9 +12,10 @@ For one trusted user only, a plain JupyterLab container may be enough. Prefer Ju
 
 | Role | Where |
 |------|--------|
-| k3s + Zero to JupyterHub (Z2JH) | Powerful host (example: Ubuntu, 24 cores / ~128 GB RAM), hostname `guest1`, LAN `172.16.0.136` |
+| k3s + Zero to JupyterHub (Z2JH) | Powerful host (example: Ubuntu, 24 cores / ~128 GB RAM, RTX 4090), hostname `guest1`, LAN `172.16.0.136` |
 | Public HTTPS + identity gate | Cloudflare Tunnel + Cloudflare Access → `https://jupyter.willyrv.com` |
 | Hub auth (classroom bootstrap) | DummyAuthenticator + allow-list (`admin`, `student1`–`student3`) behind Access |
+| Optional GPU notebooks | NVIDIA Container Toolkit + device plugin; `singleuser` requests `nvidia.com/gpu` |
 
 ```text
 Internet
@@ -113,6 +114,14 @@ singleuser:
     guarantee: 2G
     limit: 16G
   defaultUrl: /lab
+  # Optional GPU (requires §6 first). One GPU on the node → one GPU user at a time.
+  # extraPodConfig:
+  #   runtimeClassName: nvidia
+  # extraResource:
+  #   limits:
+  #     nvidia.com/gpu: "1"
+  #   guarantees:
+  #     nvidia.com/gpu: "1"
 
 scheduling:
   userScheduler:
@@ -144,6 +153,8 @@ kubectl -n jhub get svc
 
 Expected core pods: `hub`, `proxy`, `continuous-image-puller`.  
 Expected Service for the tunnel: **`proxy-public`** on port **80**.
+
+**Important:** editing `~/jupyterhub/values.yaml` alone does nothing. Always apply with `helm upgrade ... -f values.yaml`, then confirm with `helm get values jhub -n jhub`. Restart user servers (delete `jupyter-<user>` pods) so new `singleuser` settings take effect.
 
 Optional local check:
 
@@ -234,6 +245,119 @@ Dummy auth is acceptable for a tiny class **behind Access**. For per-student pas
 
 ---
 
+## 6. NVIDIA GPU for notebooks (validated on guest1)
+
+Host example: **RTX 4090**, driver **595.x**, `nvidia-smi` reports **CUDA Version: 13.2**.  
+Symptom if GPU is not passed into the pod: `nvidia-smi: command not found`, CuPy `driver 0` / `cudaErrorInsufficientDriver`.
+
+### 6.1 Host driver (must work outside k3s)
+
+```bash
+nvidia-smi   # on the node, not in a pod
+```
+
+### 6.2 NVIDIA Container Toolkit
+
+```bash
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+which nvidia-ctk nvidia-container-runtime
+```
+
+### 6.3 Wire the runtime into k3s
+
+```bash
+sudo systemctl restart k3s
+sudo grep nvidia /var/lib/rancher/k3s/agent/etc/containerd/config.toml
+```
+
+If `grep` finds nothing, set default runtime in `/etc/rancher/k3s/config.yaml`:
+
+```yaml
+default-runtime: nvidia
+```
+
+then `sudo systemctl restart k3s` again. Confirm RuntimeClasses:
+
+```bash
+sudo k3s kubectl get runtimeclass
+```
+
+### 6.4 Device plugin
+
+Until the node advertises `nvidia.com/gpu`, no pod can consume a GPU.
+
+```bash
+sudo k3s kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.17.1/deployments/static/nvidia-device-plugin.yml
+
+# Often required on k3s so the plugin itself runs with the NVIDIA runtime:
+sudo k3s kubectl -n kube-system patch ds nvidia-device-plugin-daemonset \
+  --type='json' \
+  -p='[{"op":"add","path":"/spec/template/spec/runtimeClassName","value":"nvidia"}]'
+
+sudo k3s kubectl -n kube-system delete pod -l name=nvidia-device-plugin-ds
+sudo k3s kubectl describe node | grep -i nvidia.com/gpu
+```
+
+Success looks like Capacity/Allocatable `nvidia.com/gpu: 1` (and Allocated `0` until a user pod claims it).
+
+Smoke test:
+
+```bash
+sudo k3s kubectl run gpu-test --rm -it --restart=Never \
+  --image=nvidia/cuda:12.6.0-base-ubuntu22.04 \
+  --overrides='{"spec":{"runtimeClassName":"nvidia","containers":[{"name":"gpu-test","image":"nvidia/cuda:12.6.0-base-ubuntu22.04","command":["nvidia-smi"],"resources":{"limits":{"nvidia.com/gpu":"1"}}}]}}'
+```
+
+### 6.5 Give JupyterHub user pods the GPU
+
+In `~/jupyterhub/values.yaml` under `singleuser`, enable:
+
+```yaml
+singleuser:
+  extraPodConfig:
+    runtimeClassName: nvidia
+  extraResource:
+    limits:
+      nvidia.com/gpu: "1"
+    guarantees:
+      nvidia.com/gpu: "1"
+```
+
+Apply and recycle the user server:
+
+```bash
+helm upgrade jhub jupyterhub/jupyterhub -n jhub -f ~/jupyterhub/values.yaml
+helm get values jhub -n jhub   # must show the GPU keys
+sudo k3s kubectl -n jhub delete pod jupyter-admin   # or jupyter-student1, etc.
+```
+
+Inside the new notebook pod:
+
+```bash
+nvidia-smi
+```
+
+### 6.6 CuPy tip
+
+Match the CuPy wheel to the **host** CUDA major from `nvidia-smi` (e.g. CUDA 13.x → `pip install cupy-cuda13x`). The wheel only ships a CUDA **runtime**; the **driver** must come from the host via the steps above. Prefer diagnosing with:
+
+```python
+from cupy.cuda import runtime
+print(runtime.runtimeGetVersion(), runtime.driverGetVersion())  # driver must be > 0
+```
+
+With a single GPU, schedule only one GPU notebook at a time (or use time-slicing / MIG if you add that later).
+
+---
+
 ## Resource guidance (large host)
 
 On ~24 CPU / ~128 GB RAM, limits like **4 CPU / 16 GiB per student** leave ample headroom for three concurrent users. Raise or lower `singleuser.cpu` / `singleuser.memory` in values and `helm upgrade`.
@@ -254,5 +378,5 @@ See [Backup design](../architecture/backups.md).
 - [OpenProject](openproject.md) — same Tunnel + Access pattern
 - [Headscale](headscale.md) — VPN / CGNAT
 - [Phase 5 — stateful apps](../guides/phase-05-stateful-apps.md)
-- [Experience: JupyterHub teaching stack](../experiences/2026-07-22-jupyterhub-cloudflare-tunnel.md)
+- [Experience: JupyterHub teaching stack + GPU](../experiences/2026-07-22-jupyterhub-cloudflare-tunnel.md)
 - Upstream: https://z2jh.jupyter.org/
