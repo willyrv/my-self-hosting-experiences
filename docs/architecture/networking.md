@@ -53,6 +53,10 @@ K3s ServiceLB may be enough initially. MetalLB is an alternative when services n
 
 This lab uses **[Headscale](../apps/headscale.md)** for mesh VPN and home LAN access. Because the domestic ISP uses **IPv4 CGNAT**, the control plane runs on an OVH VPS behind Nginx (DNS-only Cloudflare hostname); the home PC joins as a subnet router for `192.168.1.0/24`. Plain [WireGuard](../apps/wireguard.md) remains an alternative when inbound home port forwards are available. See [Phase 2 — VPN access](../guides/phase-02-vpn-access.md).
 
+## Cloudflare Tunnel and Access (alternate gate)
+
+For selected applications (starting with [n8n](../apps/n8n.md)), Cloudflare Tunnel can publish HTTPS without opening inbound ports on the homelab. Cloudflare Access then enforces allowlisted users on the editor UI. This complements host-level WireGuard: WireGuard remains the break-glass admin path when the cluster or Cloudflare path is unavailable; Tunnel + Access is acceptable for app UIs that should not use Traefik/cert-manager public Ingress on day one.
+
 ## Exposure policy
 
 Classify each service before deployment.
