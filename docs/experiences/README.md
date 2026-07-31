@@ -11,4 +11,5 @@ Dated notes from building and operating this self-hosting lab.
 
 ## Entries
 
+- [2026-07-31 — n8n on single-node K3s with Cloudflare Tunnel](2026-07-31-n8n-k3s-cloudflare.md)
 - [2026-07-18 — Architecture decision: hybrid K3s](2026-07-18-architecture-decision.md)

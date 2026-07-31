@@ -46,7 +46,7 @@ Recommended shape of this lab:
 - [marimo](docs/apps/marimo.md)
 - [JupyterHub](docs/apps/jupyterhub.md)
 - [GitLab or Forgejo/Gitea](docs/apps/gitlab-or-forgejo.md)
-- [n8n](docs/apps/n8n.md) (planned)
+- [n8n](docs/apps/n8n.md) (single-node K3s + Cloudflare Tunnel)
 
 ## Useful resources
 

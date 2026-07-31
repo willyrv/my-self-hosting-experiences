@@ -53,6 +53,10 @@ K3s ServiceLB may be enough initially. MetalLB is an alternative when services n
 
 Run WireGuard directly on the infrastructure host so remote administration still works when Kubernetes is unavailable. Headscale is a later alternative for mesh networking. See the dedicated [WireGuard application page](../apps/wireguard.md) and [Phase 2 — VPN access](../guides/phase-02-vpn-access.md).
 
+## Cloudflare Tunnel and Access (alternate gate)
+
+For selected applications (starting with [n8n](../apps/n8n.md)), Cloudflare Tunnel can publish HTTPS without opening inbound ports on the homelab. Cloudflare Access then enforces allowlisted users on the editor UI. This complements host-level WireGuard: WireGuard remains the break-glass admin path when the cluster or Cloudflare path is unavailable; Tunnel + Access is acceptable for app UIs that should not use Traefik/cert-manager public Ingress on day one.
+
 ## Exposure policy
 
 Classify each service before deployment.
