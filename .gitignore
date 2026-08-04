@@ -7,3 +7,6 @@ Thumbs.db
 .vscode/
 *.html
 site/
+
+# Local-only inventory (IPs / networks) — do not commit
+docs/experiences/deployment-topology.local.md

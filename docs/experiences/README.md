@@ -2,6 +2,12 @@
 
 Dated notes from building and operating this self-hosting lab.
 
+## Deployment topology
+
+See [deployment topology](deployment-topology.md) for a Mermaid overview of the PCs, services, and how they are exposed (Cloudflare Tunnel, Headscale on OVH, etc.).
+
+That public page **omits IPs and CIDRs** on purpose. A fuller local copy with addressing may live beside it as `deployment-topology.local.md` (gitignored — do not commit).
+
 ## Conventions
 
 - One file per entry: `YYYY-MM-DD-short-slug.md`
