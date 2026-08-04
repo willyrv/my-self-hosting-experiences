@@ -19,7 +19,6 @@ flowchart TB
 
   subgraph OVH["OVH VPS — public IPv4"]
     Nginx["Nginx + Certbot"]
-    Static["Static site<br/>muscle-master.willyrv.com"]
     HS["Headscale control plane<br/>headscale.willyrv.com"]
     Kuma["Uptime Kuma<br/>status.willyrv.com"]
     TS_VPS["Tailscale client<br/>probe node"]
@@ -41,7 +40,6 @@ flowchart TB
 
   Users --> CF
   Users -->|"HTTPS DNS-only<br/>(grey cloud)"| Nginx
-  Nginx --> Static
   Nginx --> HS
   Nginx --> Kuma
   HS -.->|"Tailscale / Headscale mesh"| TS_VPS
@@ -61,7 +59,7 @@ flowchart TB
 
 | Host | Role | Services | How it is reached |
 |------|------|----------|-------------------|
-| OVH VPS | Public edge + VPN control plane | Nginx/Certbot, static site, Headscale, Uptime Kuma, Tailscale probe | Direct HTTPS on the VPS (Cloudflare **DNS only** for Headscale/status); UDP STUN for embedded DERP; not behind Cloudflare Tunnel |
+| OVH VPS | Public edge + VPN control plane | Nginx/Certbot, Headscale, Uptime Kuma, Tailscale probe | Direct HTTPS on the VPS (Cloudflare **DNS only** for Headscale/status); UDP STUN for embedded DERP; not behind Cloudflare Tunnel |
 | Home infrastructure PC (`nuc2-ingress`) | Subnet router into the home LAN | Tailscale client advertising the home LAN | Outbound-only at the ISP edge (CGNAT); joins Headscale; no public inbound ports |
 | OpenProject mini PC | App node | Single-node k3s, OpenProject, `cloudflared` | Public: Cloudflare Tunnel + Access → `projects.willyrv.com`. Private: via Headscale through the subnet router (Tailscale need not run on this box) |
 | GUEST1 | Compute / teaching node | Single-node k3s, JupyterHub (+ GPU), n8n (inferred) | Public: Cloudflare Tunnel + Access → `jupyter.willyrv.com` and the n8n Access-protected hostname. Not covered by the home LAN Headscale route unless this host joins the mesh or its LAN is advertised |

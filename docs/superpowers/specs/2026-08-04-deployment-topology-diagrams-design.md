@@ -36,7 +36,7 @@ Document the computers currently hosting services described in this repository a
 
 | Host (role) | Network context | IPs (private file only) | Services | Exposure |
 |-------------|-----------------|-------------------------|----------|----------|
-| OVH VPS | Public VPS | Tailscale `100.64.0.2`; public IPv4 not literalized | Nginx/Certbot, static site (`muscle-master`), Headscale, Uptime Kuma | Direct HTTPS (Cloudflare DNS-only); UDP 3478 DERP STUN |
+| OVH VPS | Public VPS | Tailscale `100.64.0.2`; public IPv4 not literalized | Nginx/Certbot, Headscale, Uptime Kuma | Direct HTTPS (Cloudflare DNS-only); UDP 3478 DERP STUN |
 | Home Ubuntu / `nuc2-ingress` | Home LAN behind CGNAT | `192.168.1.12`, Tailscale `100.64.0.1` | Tailscale subnet router for home LAN | No inbound home ports; advertises `192.168.1.0/24` |
 | OpenProject mini PC | Same home LAN | `192.168.1.11` | Single-node k3s, OpenProject, cloudflared | Cloudflare Tunnel + Access → `projects.willyrv.com`; LAN via subnet router |
 | GUEST1 | Separate LAN | `172.16.0.136` | Single-node k3s, JupyterHub (+ GPU), n8n (inferred) | Cloudflare Tunnel + Access → `jupyter.willyrv.com` (+ n8n hostname); not on Headscale advertised subnet |

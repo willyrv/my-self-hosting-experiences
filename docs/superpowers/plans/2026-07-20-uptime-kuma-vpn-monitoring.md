@@ -93,7 +93,7 @@ Expected: ping succeeds while home subnet router is online.
 - Cloudflare DNS for `status.willyrv.com`
 
 **Interfaces:**
-- Consumes: Docker Engine on VPS; Nginx/Certbot pattern from Headscale/muscle-master
+- Consumes: Docker Engine on VPS; Nginx/Certbot pattern from Headscale
 - Produces: `https://status.willyrv.com` serving Kuma login
 
 - [ ] **Step 1: DNS**

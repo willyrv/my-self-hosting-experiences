@@ -23,13 +23,13 @@ So the original Approach 1 (control plane + DERP + WireGuard inbound on the home
 
 ## Pivot: control plane on the OVH VPS
 
-I already had a small OVH VPS hosting a static site (`muscle-master.willyrv.com`) with Nginx and Certbot. Ports 80/443 were in use, which at first looked like a conflict with Headscale.
+I already had a small OVH VPS with Nginx and Certbot. Ports 80/443 were in use, which at first looked like a conflict with Headscale.
 
 The workable pattern was:
 
 1. Point `headscale.willyrv.com` (Cloudflare **DNS only**) at the **VPS** public IP — never orange-cloud / Tunnel for Headscale.
 2. Run Headscale on the VPS listening on `127.0.0.1:8080` without terminating TLS itself.
-3. Add an Nginx vhost for `headscale.willyrv.com` that reverse-proxies to Headscale, with WebSocket-friendly headers and a long read timeout, then run Certbot for that hostname alongside the existing static site.
+3. Add an Nginx vhost for `headscale.willyrv.com` that reverse-proxies to Headscale, with WebSocket-friendly headers and a long read timeout, then run Certbot for that hostname alongside any other vhosts on the VPS.
 4. Open **UDP 3478** on the VPS for embedded DERP STUN (host `ufw` and/or OVH network firewall).
 5. Keep the **home** PC as a Tailscale client that **advertises** `192.168.1.0/24` (subnet router), with IP forwarding enabled — no inbound ports required at home.
 

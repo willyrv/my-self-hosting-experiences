@@ -13,7 +13,7 @@ Public UI: `https://status.willyrv.com` (intentional long-term public exposure).
 
 ## Placement
 
-Run on the **OVH VPS** with Docker Compose, behind the existing Nginx + Certbot edge (same pattern as Headscale and the static site). Do **not** put this stack on Rancher/K3s on a small VPS for v1 — keep it independent of a cluster so alerts still work if Kubernetes is not installed yet.
+Run on the **OVH VPS** with Docker Compose, behind the existing Nginx + Certbot edge (same pattern as Headscale). Do **not** put this stack on Rancher/K3s on a small VPS for v1 — keep it independent of a cluster so alerts still work if Kubernetes is not installed yet.
 
 ```text
 OVH VPS

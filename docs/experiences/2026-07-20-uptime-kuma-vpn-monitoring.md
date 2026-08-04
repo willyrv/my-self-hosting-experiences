@@ -14,7 +14,7 @@ I also wanted visibility into abuse: noisy scanners on the public Headscale host
 
 ## Why not Rancher + K3s on the VPS
 
-I considered deploying the monitoring stack with K3s and Rancher on OVH, since I expect more services there later. For a small VPS that already runs Nginx, a static site, and Headscale, that felt like the wrong next step: Rancher is heavy, and if availability tooling only lives inside a cluster on the same box, a cluster/ingress failure can take down both the control plane path and the alerts.
+I considered deploying the monitoring stack with K3s and Rancher on OVH, since I expect more services there later. For a small VPS that already runs Nginx and Headscale, that felt like the wrong next step: Rancher is heavy, and if availability tooling only lives inside a cluster on the same box, a cluster/ingress failure can take down both the control plane path and the alerts.
 
 I stuck with **Docker Compose + the existing Nginx** for Uptime Kuma. Kubernetes (and maybe a lighter UI than full Rancher) still belongs in the longer-term home lab plan.
 

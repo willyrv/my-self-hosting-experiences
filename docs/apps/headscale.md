@@ -22,8 +22,8 @@ Internet clients (Tailscale app)
         ▼
 OVH VPS (public IPv4)
 ├── Nginx :443 (TLS via Certbot)
-│     ├── muscle-master.willyrv.com  → static site
-│     └── headscale.willyrv.com      → 127.0.0.1:8080 (Headscale)
+│     ├── headscale.willyrv.com  → 127.0.0.1:8080 (Headscale)
+│     └── status.willyrv.com     → Uptime Kuma (see uptime-kuma.md)
 └── Headscale
       ├── control API (localhost only)
       └── embedded DERP + STUN UDP 3478
@@ -126,7 +126,7 @@ Keep TCP 80/443 open for Nginx/Certbot. Do **not** expose Headscale `:8080` publ
 
 ## 3. Nginx reverse proxy (share :443 with other sites)
 
-This VPS already serves a static site (`muscle-master.willyrv.com`) with Certbot. Add a second vhost for Headscale.
+Use Nginx + Certbot on the VPS so Headscale can share ports 80/443 with other vhosts (for example Uptime Kuma). Add a vhost for Headscale.
 
 `/etc/nginx/sites-available/headscale`:
 
