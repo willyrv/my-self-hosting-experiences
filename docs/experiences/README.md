@@ -17,6 +17,7 @@ That public page **omits IPs and CIDRs** on purpose. A fuller local copy with ad
 
 ## Entries
 
+- [2026-08-09 — GPU JupyterHub on GUEST2 (3090 Ti + local CuPy)](2026-08-09-jupyterhub-gpu-guest2.md)
 - [2026-07-31 — n8n on single-node K3s with Cloudflare Tunnel](2026-07-31-n8n-k3s-cloudflare.md)
 - [2026-07-22 — JupyterHub teaching stack + Cloudflare Tunnel (+ GPU)](2026-07-22-jupyterhub-cloudflare-tunnel.md)
 - [2026-07-22 — OpenProject on k3s + Cloudflare Tunnel](2026-07-22-openproject-cloudflare-tunnel.md)

@@ -6,6 +6,7 @@ Documentation for a hybrid K3s homelab on two or three machines: public handbook
 
 - [Architecture overview](architecture/overview.md) — recommended hybrid design
 - [Implementation phases](guides/phase-01-base-os.md) — build order
+- [JupyterHub GPU guide](guides/jupyterhub-gpu-k3s-cloudflare.md) — k3s + Tunnel + local CuPy image
 - [Experiences log](experiences/README.md) — decisions and experiments
 
 ## Browse

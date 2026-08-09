@@ -378,5 +378,7 @@ See [Backup design](../architecture/backups.md).
 - [OpenProject](openproject.md) — same Tunnel + Access pattern
 - [Headscale](headscale.md) — VPN / CGNAT
 - [Phase 5 — stateful apps](../guides/phase-05-stateful-apps.md)
+- [Guide: JupyterHub with GPU on k3s + Cloudflare](../guides/jupyterhub-gpu-k3s-cloudflare.md) — end-to-end GUEST2 / `jupyter2` path including local CuPy image
 - [Experience: JupyterHub teaching stack + GPU](../experiences/2026-07-22-jupyterhub-cloudflare-tunnel.md)
+- [Experience: GPU JupyterHub on GUEST2](../experiences/2026-08-09-jupyterhub-gpu-guest2.md)
 - Upstream: https://z2jh.jupyter.org/

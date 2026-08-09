@@ -21,6 +21,7 @@ Recommended shape of this lab:
 - [Docs home](docs/index.md)
 - [Architecture overview](docs/architecture/overview.md)
 - [Phase 1 — base OS](docs/guides/phase-01-base-os.md)
+- [JupyterHub GPU guide](docs/guides/jupyterhub-gpu-k3s-cloudflare.md) — k3s + Cloudflare Tunnel + local CuPy image
 - [Experiences log](docs/experiences/README.md)
 - Historical working note: [self_hosting_k3s_architecture.md](self_hosting_k3s_architecture.md)
 
@@ -46,7 +47,7 @@ Recommended shape of this lab:
 - [Uptime Kuma](docs/apps/uptime-kuma.md)
 - [WireGuard](docs/apps/wireguard.md) (alternative)
 - [marimo](docs/apps/marimo.md)
-- [JupyterHub](docs/apps/jupyterhub.md)
+- [JupyterHub](docs/apps/jupyterhub.md) · [GPU + Tunnel walkthrough](docs/guides/jupyterhub-gpu-k3s-cloudflare.md)
 - [GitLab or Forgejo/Gitea](docs/apps/gitlab-or-forgejo.md)
 - [n8n](docs/apps/n8n.md) (single-node K3s + Cloudflare Tunnel)
 

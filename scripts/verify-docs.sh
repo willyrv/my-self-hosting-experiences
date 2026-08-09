@@ -28,6 +28,7 @@ required_files=(
   docs/guides/phase-05-stateful-apps.md
   docs/guides/phase-06-media-and-git.md
   docs/guides/phase-07-operations.md
+  docs/guides/jupyterhub-gpu-k3s-cloudflare.md
   docs/apps/openproject.md
   docs/apps/jellyfin.md
   docs/apps/cloud-nextcloud-seafile.md
@@ -44,6 +45,7 @@ required_files=(
   docs/experiences/2026-07-20-uptime-kuma-vpn-monitoring.md
   docs/experiences/2026-07-22-openproject-cloudflare-tunnel.md
   docs/experiences/2026-07-22-jupyterhub-cloudflare-tunnel.md
+  docs/experiences/2026-08-09-jupyterhub-gpu-guest2.md
 )
 
 missing=0
