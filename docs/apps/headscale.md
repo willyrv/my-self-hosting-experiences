@@ -7,9 +7,11 @@ Status: Recommended
 [Headscale](https://headscale.net/) is a self-hosted implementation of the Tailscale control server. This lab uses it for:
 
 - mesh VPN between personal devices (laptop, phone, servers);
-- remote access to the home LAN (`192.168.1.0/24`) via a subnet router on the home Ubuntu PC.
+- remote access to the home LAN (`<home-lan-cidr>`) via a subnet router on the home Ubuntu PC.
 
 Public coordination URL: `https://headscale.willyrv.com`
+
+Real LAN/Tailscale addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ## Placement (validated)
 
@@ -31,7 +33,7 @@ OVH VPS (public IPv4)
 Home Ubuntu PC (CGNAT — no inbound ports)
 └── Tailscale client
       ├── --login-server=https://headscale.willyrv.com
-      └── advertises 192.168.1.0/24 (subnet router)
+      └── advertises <home-lan-cidr> (subnet router)
 ```
 
 Keep Headscale **outside Kubernetes**. The VPN path must remain usable when the future K3s cluster is down.
@@ -182,7 +184,7 @@ WebSocket / Tailscale Control Protocol support is required; the `Upgrade` / `Con
 On the VPS:
 
 ```bash
-sudo headscale users create willy
+sudo headscale users create <headscale-user>
 sudo headscale users list
 sudo headscale preauthkeys create --user USER_ID --reusable --expiration 24h
 ```
@@ -201,7 +203,7 @@ Interactive registration also works; approve with `headscale nodes` / auth comma
 
 ## 5. Home PC as subnet router
 
-On the home Ubuntu host (example LAN IP `192.168.1.12`):
+On the home Ubuntu host (example LAN IP `<home-subnet-router-lan-ip>`):
 
 1. Prefer **not** running a second public Headscale there (`sudo systemctl disable --now headscale` if it was started earlier).
 2. Enable forwarding:
@@ -217,7 +219,7 @@ sudo sysctl --system | grep ip_forward
 sudo tailscale up \
   --login-server=https://headscale.willyrv.com \
   --authkey=YOUR_PREAUTH_KEY \
-  --advertise-routes=192.168.1.0/24 \
+  --advertise-routes=<home-lan-cidr> \
   --accept-dns=false
 ```
 
@@ -226,7 +228,7 @@ sudo tailscale up \
 ```bash
 sudo headscale nodes list
 sudo headscale nodes list-routes
-sudo headscale nodes approve-routes --identifier NODE_ID --routes 192.168.1.0/24
+sudo headscale nodes approve-routes --identifier NODE_ID --routes <home-lan-cidr>
 sudo headscale nodes list-routes
 ```
 
@@ -241,7 +243,7 @@ From a client **outside** the home LAN (mobile data):
 ```bash
 tailscale up --login-server=https://headscale.willyrv.com --accept-routes
 tailscale status
-ping -c 3 192.168.1.1
+ping -c 3 <home-gateway-ip>
 ```
 
 Expected: home subnet router online; LAN hosts reachable.

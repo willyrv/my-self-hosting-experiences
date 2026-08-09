@@ -5,9 +5,11 @@ Status: Accepted
 
 ## Context
 
-I got a powerful machine (~24 cores, ~128 GB RAM, multi-terabyte NVMe, RTX 4090) and wanted a small teaching setup: **three students**, each with their **own space**, running notebooks I prepare. I compared marimo and JupyterHub and chose **JupyterHub** for real multi-user isolation and quotas. marimo stays useful later for reactive demos or published apps, not as the classroom account system.
+I got a large CPU/RAM host (multi-terabyte NVMe, discrete NVIDIA GPU) and wanted a small teaching setup: **three students**, each with their **own space**, running notebooks I prepare. I compared marimo and JupyterHub and chose **JupyterHub** for real multi-user isolation and quotas. marimo stays useful later for reactive demos or published apps, not as the classroom account system.
 
-The host is fresh Ubuntu (hostname `GUEST1` / `guest1`), on LAN address **`172.16.0.136`**, not on my `192.168.1.0/24` segment. Public access therefore goes through **Cloudflare Tunnel + Access** at `https://jupyter.willyrv.com`, same pattern as OpenProject — my ISP CGNAT still rules out simple home port forwards.
+The host is fresh Ubuntu (hostname `<guest1-hostname>`), on LAN address **`<guest1-lan-ip>`**, not on my `<home-lan-cidr>` segment. Public access therefore goes through **Cloudflare Tunnel + Access** at `https://jupyter.willyrv.com`, same pattern as OpenProject — my ISP CGNAT still rules out simple home port forwards.
+
+Real addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ## What I installed
 
@@ -31,11 +33,11 @@ Admin uses username `admin` the same way. This is fine for a tiny class behind A
 
 ## Network lesson
 
-Because this machine is on **`172.16.0.0/16`**, my Headscale subnet router on `192.168.1.12` does **not** automatically expose it. Tunnel covers the teaching URL. For VPN/SSH break-glass I still need either Tailscale on GUEST1 itself or a route advertisement for that subnet.
+Because this machine is on **`<guest-lan-cidr>`**, my Headscale subnet router on `<home-subnet-router-lan-ip>` does **not** automatically expose it. Tunnel covers the teaching URL. For VPN/SSH break-glass I still need either Tailscale on teaching GPU host A itself or a route advertisement for that subnet.
 
-## Enabling the RTX 4090 inside Jupyter (next day)
+## Enabling the discrete NVIDIA GPU inside Jupyter (next day)
 
-I wanted GPU acceleration (CuPy) for a NumPy training notebook. On the **host**, `nvidia-smi` looked perfect (driver 595, CUDA 13.2, RTX 4090). Inside the Jupyter pod it failed: no `nvidia-smi`, CuPy reported `runtime 13020` and **`driver 0`**. The runtime libraries were in the environment, but k3s was not passing the GPU through.
+I wanted GPU acceleration (CuPy) for a NumPy training notebook. On the **host**, `nvidia-smi` looked perfect (driver 595, CUDA 13.2, discrete NVIDIA GPU). Inside the Jupyter pod it failed: no `nvidia-smi`, CuPy reported `runtime 13020` and **`driver 0`**. The runtime libraries were in the environment, but k3s was not passing the GPU through.
 
 What fixed it, in order:
 
@@ -55,7 +57,7 @@ After that, `nvidia-smi` worked in the notebook pod and CuPy could see a real dr
 
 - Pin image/chart versions instead of `latest`.
 - Shared course materials volume or git-pull init for assignments.
-- Join GUEST1 to Headscale for private admin access.
+- Join teaching GPU host A to Headscale for private admin access.
 - Backup user home PVCs before the next teaching term.
 - Decide how to share one GPU across students (queue, time-slicing, or admin-only GPU profile).
 

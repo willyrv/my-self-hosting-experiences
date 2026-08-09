@@ -84,10 +84,11 @@ result = subprocess.run(
     capture_output=True,
     text=True,
 )
+all_markdown = [Path(path) for path in result.stdout.splitlines()]
 markdown_files = [
-    Path(path)
-    for path in result.stdout.splitlines()
-    if Path(path).parts[:2] != ("docs", "superpowers")
+    path
+    for path in all_markdown
+    if path.parts[:2] != ("docs", "superpowers")
 ]
 
 link_pattern = re.compile(r"\[[^\]]*\]\((<[^>]+>|[^)\s]+)")
@@ -110,6 +111,55 @@ if broken_links:
     raise SystemExit(1)
 
 print(f"link-check: OK ({len(markdown_files)} markdown files)")
+
+# Fail if tracked markdown reintroduces private inventory (local *.local.md is gitignored).
+ip_pattern = re.compile(
+    r"\b(?:(?:10\.\d{1,3}\.\d{1,3}\.\d{1,3})|"
+    r"(?:172\.(?:1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})|"
+    r"(?:192\.168\.\d{1,3}\.\d{1,3})|"
+    r"(?:100\.64\.\d{1,3}\.\d{1,3}))\b"
+)
+# Documentation / public resolver / loopback / whole private *blocks* (not hosts).
+allowed_ips = {
+    "127.0.0.1",
+    "0.0.0.0",
+    "1.1.1.1",
+    "1.0.0.1",
+    "100.64.0.0",  # CGNAT block documentation only (100.64.0.0/10)
+}
+# Permit RFC5737 TEST-NET host examples such as 192.0.2.220
+allowed_ip_prefixes = ("192.0.2.", "198.51.100.", "203.0.113.")
+
+other_patterns = [
+    (re.compile(r"\bnuc2-ingress\b", re.I), "private hostname nuc2-ingress"),
+    (re.compile(r"\bGUEST[12]\b"), "private hostname GUEST1/GUEST2"),
+    (re.compile(r"\bRTX\s*40\d0\b|\bRTX\s*30\d0\b", re.I), "exact GPU SKU"),
+    (re.compile(r"/home/willy\b"), "operator home path"),
+    (re.compile(r"--user\s+willy\b"), "operator Headscale username"),
+]
+
+leaks = []
+for markdown_file in all_markdown:
+    if markdown_file.name.endswith(".local.md"):
+        continue
+    for lineno, line in enumerate(
+        markdown_file.read_text(encoding="utf-8").splitlines(), start=1
+    ):
+        for match in ip_pattern.finditer(line):
+            ip = match.group(0)
+            if ip in allowed_ips or ip.startswith(allowed_ip_prefixes):
+                continue
+            leaks.append(f"{markdown_file}:{lineno}: private IP {ip}: {line.strip()[:120]}")
+        for pattern, label in other_patterns:
+            if pattern.search(line):
+                leaks.append(f"{markdown_file}:{lineno}: {label}: {line.strip()[:120]}")
+
+if leaks:
+    print("INVENTORY LEAKS (use placeholders; keep real values in docs/**/*.local.md):")
+    print("\n".join(leaks))
+    raise SystemExit(1)
+
+print("inventory-check: OK")
 PY
 then
   missing=1

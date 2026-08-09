@@ -29,19 +29,19 @@ Document the computers currently hosting services described in this repository a
 | Layout | Two side-by-side files (Approach 1) |
 | Public path | `docs/experiences/deployment-topology.md` |
 | Private path | `docs/experiences/deployment-topology.local.md` |
-| Ignore rule | Add `docs/experiences/deployment-topology.local.md` to `.gitignore` |
+| Ignore rule | `docs/**/*.local.md` in `.gitignore` (covers topology + inventory companions) |
 | README | Short “Deployment topology” section in `docs/experiences/README.md` |
 
 ## Topology content (from experience posts)
 
 | Host (role) | Network context | IPs (private file only) | Services | Exposure |
 |-------------|-----------------|-------------------------|----------|----------|
-| OVH VPS | Public VPS | Tailscale `100.64.0.2`; public IPv4 not literalized | Nginx/Certbot, Headscale, Uptime Kuma | Direct HTTPS (Cloudflare DNS-only); UDP 3478 DERP STUN |
-| Home Ubuntu / `nuc2-ingress` | Home LAN behind CGNAT | `192.168.1.12`, Tailscale `100.64.0.1` | Tailscale subnet router for home LAN | No inbound home ports; advertises `192.168.1.0/24` |
-| OpenProject mini PC | Same home LAN | `192.168.1.11` | Single-node k3s, OpenProject, cloudflared | Cloudflare Tunnel + Access → `projects.willyrv.com`; LAN via subnet router |
-| GUEST1 | Separate LAN | `172.16.0.136` | Single-node k3s, JupyterHub (+ GPU), n8n (inferred) | Cloudflare Tunnel + Access → `jupyter.willyrv.com` (+ n8n hostname); not on Headscale advertised subnet |
+| OVH VPS | Public VPS | Tailscale `<ts-vps-probe>`; public IPv4 not literalized | Nginx/Certbot, Headscale, Uptime Kuma | Direct HTTPS (Cloudflare DNS-only); UDP 3478 DERP STUN |
+| Home infrastructure PC (subnet router) / `<home-bridge-hostname>` | Home LAN behind CGNAT | `<home-subnet-router-lan-ip>`, Tailscale `<ts-home-node>` | Tailscale subnet router for home LAN | No inbound home ports; advertises `<home-lan-cidr>` |
+| OpenProject mini PC | Same home LAN | `<openproject-lan-ip>` | Single-node k3s, OpenProject, cloudflared | Cloudflare Tunnel + Access → `projects.willyrv.com`; LAN via subnet router |
+| Teaching GPU host A (`<guest1-hostname>`) | Separate LAN | `<guest1-lan-ip>` | Single-node k3s, JupyterHub (+ GPU), n8n (inferred) | Cloudflare Tunnel + Access → `jupyter.willyrv.com` (+ n8n hostname); not on Headscale advertised subnet |
 
-**Inference:** n8n design/spec places it on the high-spec single-node k3s host (24 CPU / ~128 GB), which matches GUEST1. Public and private diagrams note this as inferred if the experience post does not name the host.
+**Inference:** n8n design/spec places it on the large CPU/RAM single-node k3s host, which matches teaching GPU host A. Public and private diagrams note this as inferred if the experience post does not name the host.
 
 ## Public vs private rules
 

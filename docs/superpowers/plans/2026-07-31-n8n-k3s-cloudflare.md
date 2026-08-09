@@ -34,7 +34,7 @@
 Working directory for handbook edits:
 
 ```bash
-cd /media/willy/DATA1/github_willyrv/my-self-hosting-experiences
+cd <repo-root>
 ```
 
 Cluster commands assume `kubectl` talks to the single-node K3s API (default kubeconfig).

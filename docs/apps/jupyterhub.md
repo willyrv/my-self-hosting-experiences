@@ -12,10 +12,12 @@ For one trusted user only, a plain JupyterLab container may be enough. Prefer Ju
 
 | Role | Where |
 |------|--------|
-| k3s + Zero to JupyterHub (Z2JH) | Powerful host (example: Ubuntu, 24 cores / ~128 GB RAM, RTX 4090), hostname `guest1`, LAN `172.16.0.136` |
+| k3s + Zero to JupyterHub (Z2JH) | Teaching GPU host A (large CPU/RAM host, discrete NVIDIA GPU); hostname `<guest1-hostname>`, LAN `<guest1-lan-ip>` |
 | Public HTTPS + identity gate | Cloudflare Tunnel + Cloudflare Access → `https://jupyter.willyrv.com` |
 | Hub auth (classroom bootstrap) | DummyAuthenticator + allow-list (`admin`, `student1`–`student3`) behind Access |
 | Optional GPU notebooks | NVIDIA Container Toolkit + device plugin; `singleuser` requests `nvidia.com/gpu` |
+
+Real LAN addresses and hostnames live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ```text
 Internet
@@ -29,7 +31,7 @@ Service proxy-public:80  (JupyterHub configurable-http-proxy)
 hub + per-user pods (scipy-notebook) + local-path home PVCs
 ```
 
-**Network note:** If this host is **not** on `192.168.1.0/24`, the existing Headscale subnet router on `192.168.1.12` will not reach it automatically. Join this machine to Headscale as its own Tailscale client, or advertise the correct LAN route. Public Tunnel access does not depend on that.
+**Network note:** If this host is **not** on `<home-lan-cidr>`, the existing Headscale subnet router on `<home-subnet-router-lan-ip>` will not reach it automatically. Join this machine to Headscale as its own Tailscale client, or advertise the correct LAN route. Public Tunnel access does not depend on that.
 
 Do not expose an editable Hub to the open Internet without Access (or VPN-only).
 
@@ -167,7 +169,7 @@ kubectl -n jhub port-forward svc/proxy-public 8080:80
 
 ## 3. Cloudflare Tunnel
 
-1. Zero Trust → **Tunnels** → create (e.g. `jupyter-guest1`).
+1. Zero Trust → **Tunnels** → create (e.g. `jupyter-teaching-a`).
 2. Public hostname:
 
 | Field | Value |
@@ -245,9 +247,9 @@ Dummy auth is acceptable for a tiny class **behind Access**. For per-student pas
 
 ---
 
-## 6. NVIDIA GPU for notebooks (validated on guest1)
+## 6. NVIDIA GPU for notebooks (validated on teaching GPU host A)
 
-Host example: **RTX 4090**, driver **595.x**, `nvidia-smi` reports **CUDA Version: 13.2**.  
+Host example: **discrete NVIDIA GPU**, driver **595.x**, `nvidia-smi` reports **CUDA Version: 13.2**.  
 Symptom if GPU is not passed into the pod: `nvidia-smi: command not found`, CuPy `driver 0` / `cudaErrorInsufficientDriver`.
 
 ### 6.1 Host driver (must work outside k3s)
@@ -360,7 +362,7 @@ With a single GPU, schedule only one GPU notebook at a time (or use time-slicing
 
 ## Resource guidance (large host)
 
-On ~24 CPU / ~128 GB RAM, limits like **4 CPU / 16 GiB per student** leave ample headroom for three concurrent users. Raise or lower `singleuser.cpu` / `singleuser.memory` in values and `helm upgrade`.
+On a large CPU/RAM host, limits like **4 CPU / 16 GiB per student** leave ample headroom for three concurrent users. Raise or lower `singleuser.cpu` / `singleuser.memory` in values and `helm upgrade`.
 
 Enable **culling** so idle servers release capacity.
 
@@ -378,7 +380,7 @@ See [Backup design](../architecture/backups.md).
 - [OpenProject](openproject.md) — same Tunnel + Access pattern
 - [Headscale](headscale.md) — VPN / CGNAT
 - [Phase 5 — stateful apps](../guides/phase-05-stateful-apps.md)
-- [Guide: JupyterHub with GPU on k3s + Cloudflare](../guides/jupyterhub-gpu-k3s-cloudflare.md) — end-to-end GUEST2 / `jupyter2` path including local CuPy image
+- [Guide: JupyterHub with GPU on k3s + Cloudflare](../guides/jupyterhub-gpu-k3s-cloudflare.md) — end-to-end teaching GPU host B / `jupyter2` path including local CuPy image
 - [Experience: JupyterHub teaching stack + GPU](../experiences/2026-07-22-jupyterhub-cloudflare-tunnel.md)
-- [Experience: GPU JupyterHub on GUEST2](../experiences/2026-08-09-jupyterhub-gpu-guest2.md)
+- [Experience: GPU JupyterHub on teaching GPU host B](../experiences/2026-08-09-jupyterhub-gpu-guest2.md)
 - Upstream: https://z2jh.jupyter.org/

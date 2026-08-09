@@ -1,0 +1,25 @@
+# Private inventory EXAMPLE (safe to commit)
+
+Copy to `docs/inventory.local.md` and fill with real values.  
+`docs/inventory.local.md` is gitignored via `docs/**/*.local.md`.
+
+Do not put real RFC1918 or Tailscale host addresses in this example file — only describe the placeholder names.
+
+| Placeholder in public docs | Fill with |
+|----------------------------|-----------|
+| `<home-lan-cidr>` | Home LAN CIDR |
+| `<home-gateway-ip>` | Default gateway on that LAN |
+| `<home-subnet-router-lan-ip>` | LAN IP of the Headscale subnet router |
+| `<home-bridge-hostname>` | Hostname of that router PC |
+| `<openproject-lan-ip>` | LAN IP of the OpenProject k3s node |
+| `<guest-lan-cidr>` | Separate teaching/GPU LAN CIDR |
+| `<guest1-lan-ip>` | LAN IP of teaching GPU host A |
+| `<guest1-hostname>` | Hostname of teaching GPU host A |
+| `<guest2-lan-ip>` | LAN IP of teaching GPU host B |
+| `<guest2-hostname>` | Hostname of teaching GPU host B |
+| `<ts-home-node>` | Tailscale IP of home bridge |
+| `<ts-vps-probe>` | Tailscale IP of VPS probe |
+| `<headscale-user>` | Headscale CLI username |
+| `<repo-root>` | Absolute path to this clone |
+
+Also maintain `docs/experiences/deployment-topology.local.md` with the addressed Mermaid diagram (gitignored).

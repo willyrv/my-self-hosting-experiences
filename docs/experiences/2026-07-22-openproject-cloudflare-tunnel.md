@@ -5,7 +5,9 @@ Status: Accepted
 
 ## Context
 
-I wanted OpenProject on a dedicated home mini PC (`192.168.1.11`, Ubuntu 24.04, 8 GB RAM / 4 CPUs) using **k3s**, while still reaching it from outside. My ISP line is **IPv4 CGNAT**, so classic port forwarding to the house is not an option. I already had Headscale on an OVH VPS and a subnet router on `192.168.1.12` advertising `192.168.1.0/24`.
+I wanted OpenProject on a dedicated home mini PC (~8 GB RAM / 4 CPUs, Ubuntu 24.04; LAN `<openproject-lan-ip>`) using **k3s**, while still reaching it from outside. My ISP line is **IPv4 CGNAT**, so classic port forwarding to the house is not an option. I already had Headscale on an OVH VPS and a subnet router on `<home-subnet-router-lan-ip>` advertising `<home-lan-cidr>`.
+
+Real addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ## What I decided
 

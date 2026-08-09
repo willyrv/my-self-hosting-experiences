@@ -226,7 +226,7 @@ sudo systemctl start headscale
 # Home monitor: on home PC briefly
 sudo tailscale down
 # wait for alert, then:
-sudo tailscale up --login-server=https://headscale.willyrv.com --accept-dns=false --advertise-routes=192.168.1.0/24
+sudo tailscale up --login-server=https://headscale.willyrv.com --accept-dns=false --advertise-routes=<home-lan-cidr>
 # re-approve routes on VPS if needed
 ```
 

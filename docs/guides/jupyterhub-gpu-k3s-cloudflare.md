@@ -1,7 +1,7 @@
 # Guide — JupyterHub with GPU on k3s + Cloudflare Tunnel
 
 Status: Recommended  
-Audience: Single-node home lab with an NVIDIA GPU (validated path: **RTX 3090 Ti** / **RTX 4090**, driver **595.x**, host CUDA **13.x**)
+Audience: Single-node home lab with an NVIDIA GPU (validated path: discrete NVIDIA GPU, driver **595.x**, host CUDA **13.x**)
 
 ## Goal
 
@@ -12,9 +12,11 @@ Run **JupyterHub** on a fresh Ubuntu host with:
 - public URL via **Cloudflare Tunnel + Access** (no home port forwards; works with ISP CGNAT);
 - **CuPy preinstalled** in a **local** container image (no Docker Hub / GHCR required).
 
-Example public hostname used in this lab: `https://jupyter2.willyrv.com` on host **GUEST2**.
+Example public hostname used in this lab: `https://jupyter2.willyrv.com` on teaching GPU host B (`<guest2-hostname>`).
 
-For app-level notes and the earlier teaching-box (`jupyter.willyrv.com` / GUEST1) details, see also [JupyterHub](../apps/jupyterhub.md).
+For app-level notes and the earlier teaching-box (`jupyter.willyrv.com` / teaching GPU host A) details, see also [JupyterHub](../apps/jupyterhub.md).
+
+Real addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ---
 
@@ -39,7 +41,7 @@ Host NVIDIA driver (e.g. 595.x) + Container Toolkit + device plugin
 
 **One physical GPU ⇒ one GPU notebook at a time** unless you add time-slicing/MIG later.
 
-If the host is **not** on `192.168.1.0/24`, the Headscale subnet router on that LAN does not reach it automatically. Public Tunnel access still works; for VPN/SSH, join the host to Headscale or advertise the correct route.
+If the host is **not** on `<home-lan-cidr>`, the Headscale subnet router on that LAN does not reach it automatically. Public Tunnel access still works; for VPN/SSH, join the host to Headscale or advertise the correct route.
 
 ---
 
@@ -443,5 +445,5 @@ Editing `values.yaml` alone does **not** change the cluster — always `helm upg
 - [Phase 5 — stateful apps](phase-05-stateful-apps.md)
 - [OpenProject + Tunnel](../apps/openproject.md) — same edge pattern
 - [Headscale](../apps/headscale.md) — VPN / CGNAT
-- [Experience: GPU JupyterHub on GUEST2](../experiences/2026-08-09-jupyterhub-gpu-guest2.md)
+- [Experience: GPU JupyterHub on teaching GPU host B](../experiences/2026-08-09-jupyterhub-gpu-guest2.md)
 - Upstream Z2JH: https://z2jh.jupyter.org/

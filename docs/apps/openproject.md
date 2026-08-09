@@ -10,9 +10,11 @@ Status: Recommended
 
 | Role | Where |
 |------|--------|
-| k3s + OpenProject Helm | Home mini PC `192.168.1.11` (Ubuntu 24.04, ~8 GB RAM / 4 CPU) |
+| k3s + OpenProject Helm | Small mini PC (~8 GB RAM / 4 CPU, Ubuntu 24.04); LAN `<openproject-lan-ip>` |
 | Public HTTPS + identity gate | Cloudflare Tunnel + Cloudflare Access |
-| Private / break-glass access | LAN or Headscale via subnet router `192.168.1.12` (`192.168.1.0/24`) |
+| Private / break-glass access | LAN or Headscale via subnet router `<home-subnet-router-lan-ip>` (`<home-lan-cidr>`) |
+
+Real LAN addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ```text
 Internet
@@ -25,12 +27,12 @@ Service openproject:8080 (ClusterIP)
    │
 OpenProject + PostgreSQL + Memcached (+ Hocuspocus)
    │
-local-path PVs on 192.168.1.11
+local-path PVs on the OpenProject node
 
 Also:  outside Tailscale client
           → Headscale (OVH)
-          → 192.168.1.12 (subnet router)
-          → 192.168.1.11 (no Tailscale required on this box)
+          → <home-subnet-router-lan-ip> (subnet router)
+          → <openproject-lan-ip> (no Tailscale required on this box)
 ```
 
 Do **not** put Headscale itself behind a Cloudflare Tunnel. Tunnels are appropriate for HTTP apps such as OpenProject.
@@ -41,7 +43,7 @@ Do **not** put Headscale itself behind a Cloudflare Tunnel. Tunnels are appropri
 
 On a fresh Ubuntu Server (example hostname `minipc-server`):
 
-- Static DHCP lease for `192.168.1.11`
+- Static DHCP lease for `<openproject-lan-ip>`
 - Enough disk for PVs (SSD preferred)
 - Optional: leave Docker unused; k3s uses containerd
 
@@ -220,9 +222,9 @@ Flow: browser → Access → Tunnel → OpenProject → OpenProject’s own admi
 
 ---
 
-## 6. Private access without Tailscale on `.11`
+## 6. Private access without Tailscale on the OpenProject node
 
-If `192.168.1.12` advertises `192.168.1.0/24` to Headscale and remote clients **accept routes**, they can reach `192.168.1.11` for SSH or LAN-side checks **without** installing Tailscale on the OpenProject node. Public users still use `projects.willyrv.com`.
+If `<home-subnet-router-lan-ip>` advertises `<home-lan-cidr>` to Headscale and remote clients **accept routes**, they can reach `<openproject-lan-ip>` for SSH or LAN-side checks **without** installing Tailscale on the OpenProject node. Public users still use `projects.willyrv.com`.
 
 ---
 
@@ -241,7 +243,7 @@ Test a restore before relying on the service; see [Backup design](../architectur
 - Strong OpenProject admin password; force reset on first login if desired.
 - Cloudflare Access in front of the public hostname.
 - Do not expose PostgreSQL/Memcached outside the cluster.
-- Keep the Headscale subnet router (`192.168.1.12`) highly available for private access.
+- Keep the Headscale subnet router (`<home-subnet-router-lan-ip>`) highly available for private access.
 
 ## See also
 

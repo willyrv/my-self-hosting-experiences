@@ -5,7 +5,9 @@ Status: Accepted
 
 ## Context
 
-After moving Headscale to the OVH VPS (because of home IPv4 CGNAT) and using the home Ubuntu PC as a Tailscale subnet router into `192.168.1.0/24`, I wanted something simple to answer two questions when I’m away:
+After moving Headscale to the OVH VPS (because of home IPv4 CGNAT) and using the home Ubuntu PC as a Tailscale subnet router into `<home-lan-cidr>`, I wanted something simple to answer two questions when I’m away:
+
+Real addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 1. Is Headscale on the VPS up?
 2. Is the home PC still on the tailnet (so I can reach the LAN)?
@@ -22,15 +24,15 @@ I stuck with **Docker Compose + the existing Nginx** for Uptime Kuma. Kubernetes
 
 On the OVH VPS:
 
-1. **Joined Tailscale** to my Headscale instance as a probe node (`100.64.0.2`), without needing `--accept-routes` just to ping the home node.
-2. Confirmed the home bridge (`nuc2-ingress` at `100.64.0.1`) answered ICMP over the tailnet.
+1. **Joined Tailscale** to my Headscale instance as a probe node (`<ts-vps-probe>`), without needing `--accept-routes` just to ping the home node.
+2. Confirmed the home bridge (`<home-bridge-hostname>` at `<ts-home-node>`) answered ICMP over the tailnet.
 3. Ran **Uptime Kuma** in Docker, published only on `127.0.0.1:3001`, and put **Nginx + Certbot** in front at `https://status.willyrv.com` (Cloudflare DNS-only).
 4. Kept the status UI **public on purpose**, with a strong unique admin password — handy from anywhere, with the understanding that the UI needs the same edge hygiene as any other public admin surface.
 
 Monitors that matter:
 
 - HTTP(s) → `https://headscale.willyrv.com/health`
-- Ping (or TCP if Docker bridge blocks ICMP) → `100.64.0.1`
+- Ping (or TCP if Docker bridge blocks ICMP) → `<ts-home-node>`
 
 Notifications go out through ntfy/Telegram so a Headscale outage or a dead home bridge wakes me up.
 

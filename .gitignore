@@ -8,5 +8,5 @@ Thumbs.db
 *.html
 site/
 
-# Local-only inventory (IPs / networks) — do not commit
-docs/experiences/deployment-topology.local.md
+# Local-only inventory / private companions (IPs, hostnames, hardware) — do not commit
+docs/**/*.local.md

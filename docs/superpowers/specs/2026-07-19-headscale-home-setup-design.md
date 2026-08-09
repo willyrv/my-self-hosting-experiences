@@ -5,7 +5,7 @@ Status: Approved for planning
 
 ## Purpose
 
-Configure a self-hosted **Headscale** control server on an existing Ubuntu Server PC so personal devices form a mesh VPN and can reach the home LAN (`192.168.1.0/24`). The public hostname is `headscale.willyrv.com` (Cloudflare DNS). The ISP public IP may be dynamic.
+Configure a self-hosted **Headscale** control server on an existing Ubuntu Server PC so personal devices form a mesh VPN and can reach the home LAN (`<home-lan-cidr>`). The public hostname is `headscale.willyrv.com` (Cloudflare DNS). The ISP public IP may be dynamic.
 
 This replaces the earlier “start with plain WireGuard” Phase 2 default for this lab with Headscale, while keeping the VPN **on the host** (not inside Kubernetes).
 
@@ -17,7 +17,7 @@ This replaces the earlier “start with plain WireGuard” Phase 2 default for t
 - Dynamic public IP kept in sync via Cloudflare API DDNS from the Headscale host.
 - Router port-forwards the required TCP/UDP ports to the Ubuntu PC.
 - Official Tailscale clients join the private coordination server.
-- The Headscale host advertises `192.168.1.0/24` as a subnet router so remote clients can reach the LAN.
+- The Headscale host advertises `<home-lan-cidr>` as a subnet router so remote clients can reach the LAN.
 - Document the validated setup in this repository (no secrets in git).
 
 ## Non-goals
@@ -33,11 +33,11 @@ This replaces the earlier “start with plain WireGuard” Phase 2 default for t
 
 | Topic | Choice |
 |-------|--------|
-| Primary use | Mesh between devices **and** LAN access (`192.168.1.0/24`) |
+| Primary use | Mesh between devices **and** LAN access (`<home-lan-cidr>`) |
 | DNS exposure | Cloudflare **DNS only** + DDNS |
 | TLS | Headscale built-in Let’s Encrypt |
 | Topology | Single home node (Approach 1) |
-| LAN CIDR | `192.168.1.0/24` |
+| LAN CIDR | `<home-lan-cidr>` |
 
 ### Why no reverse proxy
 
@@ -59,7 +59,7 @@ Home router (public IP, possibly dynamic)
         ▼
 Ubuntu PC (Headscale + embedded DERP + subnet router)
         │
-        └── advertises 192.168.1.0/24 to the tailnet
+        └── advertises <home-lan-cidr> to the tailnet
 ```
 
 ## Component design
@@ -89,7 +89,7 @@ Exact config keys depend on the installed Headscale version; the implementation 
 - Enable IPv4 forwarding on the Ubuntu PC
 - Host firewall allows inbound TCP 443, UDP 41641, UDP 3478 from WAN (and established/related); deny other unsolicited WAN ingress
 - Register this host as a Tailscale/Headscale node
-- Advertise route `192.168.1.0/24` and approve it in Headscale
+- Advertise route `<home-lan-cidr>` and approve it in Headscale
 
 ### Clients
 
@@ -102,7 +102,7 @@ Exact config keys depend on the installed Headscale version; the implementation 
 2. Create DNS-only A record + install/configure Cloudflare DDNS on the host.
 3. Configure router port forwards (TCP 443, UDP 41641, UDP 3478).
 4. Configure and start Headscale with native ACME; open host firewall.
-5. Create user and credentials; join server node; enable forwarding; advertise and approve `192.168.1.0/24`.
+5. Create user and credentials; join server node; enable forwarding; advertise and approve `<home-lan-cidr>`.
 6. Enroll a remote client; verify mesh + LAN access.
 7. Update repository docs (`docs/apps/headscale.md`, experience note, Phase 2 / WireGuard cross-links). Commit no secrets.
 
@@ -110,7 +110,7 @@ Exact config keys depend on the installed Headscale version; the implementation 
 
 - `https://headscale.willyrv.com` presents a valid certificate and Headscale responds.
 - A remote Tailscale client joins the tailnet and sees registered nodes.
-- From that client, a host on `192.168.1.0/24` is reachable.
+- From that client, a host on `<home-lan-cidr>` is reachable.
 - After a public IP change (or forced DDNS refresh), DNS updates and clients can reconnect.
 
 ## Documentation deliverables
@@ -127,7 +127,7 @@ Exact config keys depend on the installed Headscale version; the implementation 
 | CGNAT / ISP blocks inbound | Test port forwards early; fall back to VPS DERP or VPS-hosted Headscale only if needed |
 | Dynamic IP lag | DDNS with short TTL; document client reconnect after IP change |
 | Misconfigured WebSockets if proxy added later | Keep native TLS; do not introduce Cloudflare proxy |
-| Accidental LAN exposure | Advertise only `192.168.1.0/24`; no exit node in v1; tighten ACLs later if needed |
+| Accidental LAN exposure | Advertise only `<home-lan-cidr>`; no exit node in v1; tighten ACLs later if needed |
 
 ## Success criteria
 

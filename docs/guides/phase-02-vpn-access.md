@@ -10,7 +10,7 @@ Establish a private administration path that remains available when K3s is stopp
 
 - Confirm whether the home ISP allows inbound IPv4 (watch for **CGNAT**).
 - If CGNAT (this lab): run **Headscale** on a VPS with a public IP; put Nginx + Certbot in front; DNS-only on Cloudflare.
-- Join the home infrastructure PC as a Tailscale client and advertise `192.168.1.0/24`.
+- Join the home infrastructure PC as a Tailscale client and advertise `<home-lan-cidr>` (real CIDRs in gitignored `docs/inventory.local.md` / `docs/experiences/deployment-topology.local.md`).
 - Approve the subnet route in Headscale (`nodes approve-routes` on v0.29+).
 - Enroll a remote peer off the home LAN and test LAN reachability.
 - Remove or avoid public SSH exposure.
@@ -30,7 +30,7 @@ Plain [WireGuard](../apps/wireguard.md) remains an alternative if a real public 
 ## Verify before next phase
 
 - A remote client joins `https://headscale.willyrv.com` (or your login server) from outside the home LAN.
-- The client can reach intended hosts on `192.168.1.0/24` with `--accept-routes`.
+- The client can reach intended hosts on `<home-lan-cidr>` with `--accept-routes`.
 - Administration remains possible while K3s is stopped or absent.
 - Public exposure of SSH is removed or never enabled.
 - Encrypted recovery copies of Headscale/TLS configuration exist outside the VPS.

@@ -260,7 +260,7 @@ K3s includes ServiceLB, which may be enough initially.
 Alternatively, install MetalLB and reserve a small range on your LAN:
 
 ```text
-192.168.1.220–192.168.1.230
+192.0.2.220–230
 ```
 
 Do not include these addresses in your router’s normal DHCP allocation range.

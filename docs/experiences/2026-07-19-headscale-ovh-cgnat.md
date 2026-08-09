@@ -5,13 +5,15 @@ Status: Accepted
 
 ## Context
 
-I wanted a private VPN into my homelab: mesh between my own devices, plus access to the home LAN (`192.168.1.0/24`). I already had a small Ubuntu Server PC at home with Headscale installed, a domain on Cloudflare (`headscale.willyrv.com`), and a domestic internet line. The handbook originally leaned toward host-level WireGuard or Headscale on that infrastructure machine, with router port forwards.
+I wanted a private VPN into my homelab: mesh between my own devices, plus access to the home LAN (`<home-lan-cidr>`). I already had a small Ubuntu Server PC at home with Headscale installed, a domain on Cloudflare (`headscale.willyrv.com`), and a domestic internet line. The handbook originally leaned toward host-level WireGuard or Headscale on that infrastructure machine, with router port forwards.
+
+Real addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ## What I tried first
 
 I followed a “Headscale at home” plan: DNS for `headscale.willyrv.com`, native Let’s Encrypt on the PC, and forwards for TCP 443, UDP WireGuard, and STUN.
 
-On the Ubuntu box the basics looked fine — Headscale **v0.29.2** was active, the LAN address was `192.168.1.12`, and `curl` to public IP checkers returned an IPv4 address. I also learned how to verify DNS with `dig +short headscale.willyrv.com A` after creating the Cloudflare A record.
+On the Ubuntu box the basics looked fine — Headscale **v0.29.2** was active, the LAN address was `<home-subnet-router-lan-ip>`, and `curl` to public IP checkers returned an IPv4 address. I also learned how to verify DNS with `dig +short headscale.willyrv.com A` after creating the Cloudflare A record.
 
 Then I opened the ISP router UI to set port forwards and hit a wall.
 
@@ -31,7 +33,7 @@ The workable pattern was:
 2. Run Headscale on the VPS listening on `127.0.0.1:8080` without terminating TLS itself.
 3. Add an Nginx vhost for `headscale.willyrv.com` that reverse-proxies to Headscale, with WebSocket-friendly headers and a long read timeout, then run Certbot for that hostname alongside any other vhosts on the VPS.
 4. Open **UDP 3478** on the VPS for embedded DERP STUN (host `ufw` and/or OVH network firewall).
-5. Keep the **home** PC as a Tailscale client that **advertises** `192.168.1.0/24` (subnet router), with IP forwarding enabled — no inbound ports required at home.
+5. Keep the **home** PC as a Tailscale client that **advertises** `<home-lan-cidr>` (subnet router), with IP forwarding enabled — no inbound ports required at home.
 
 Sharing 443 with websites is normal: Nginx selects the backend by `server_name`. Headscale does not need exclusive ownership of the port.
 
@@ -41,14 +43,14 @@ Older docs and my first draft plan mentioned `headscale routes …`. On **v0.29*
 
 ```bash
 headscale nodes list-routes
-headscale nodes approve-routes --identifier NODE_ID --routes 192.168.1.0/24
+headscale nodes approve-routes --identifier NODE_ID --routes <home-lan-cidr>
 ```
 
 Once I used those, approving the home LAN route worked.
 
 ## Outcome
 
-The setup is working: clients log in against `https://headscale.willyrv.com` on the OVH VPS, and the home machine routes into `192.168.1.0/24`.
+The setup is working: clients log in against `https://headscale.willyrv.com` on the OVH VPS, and the home machine routes into `<home-lan-cidr>`.
 
 Central lesson for this lab:
 

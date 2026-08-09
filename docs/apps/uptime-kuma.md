@@ -55,12 +55,14 @@ Nginx proxies `status.willyrv.com` to `http://127.0.0.1:3001` with WebSocket upg
 | Name | Type | Target |
 |------|------|--------|
 | Headscale health | HTTP(s) | `https://headscale.willyrv.com/health` |
-| Home bridge | Ping or TCP | Home node Tailscale IP (e.g. `100.64.0.1`) |
+| Home bridge | Ping or TCP | Home node Tailscale IP (e.g. `<ts-home-node>`) |
+
+Real Tailscale/LAN addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 Prerequisites:
 
 - VPS joined to Headscale as a **probe** client (no subnet/exit routes required for the ping check).
-- Home PC always online on the tailnet with `192.168.1.0/24` advertised and approved.
+- Home PC always online on the tailnet with `<home-lan-cidr>` advertised and approved.
 
 Notifications: ntfy and/or Telegram from the Kuma UI.
 

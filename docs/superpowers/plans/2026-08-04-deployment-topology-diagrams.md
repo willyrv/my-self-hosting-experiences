@@ -12,7 +12,7 @@
 
 - Public diagram must not contain LAN IPs, Tailscale IPs, CIDRs, or public VPS IPv4 literals.
 - Private file path must be exactly `docs/experiences/deployment-topology.local.md` and listed in `.gitignore`.
-- n8n host is GUEST1 by inference from the design spec; label it as inferred.
+- n8n host is teaching GPU host A by inference from the design spec; label it as inferred.
 - Do not invent an n8n FQDN; handbook uses `n8n.example.net` placeholder — public diagram says “n8n (Access-protected hostname)” without a real FQDN.
 - Do not commit unless the user asks.
 
@@ -43,7 +43,7 @@ docs/experiences/deployment-topology.local.md
 
 Create `docs/experiences/deployment-topology.md` with:
 - Short intro + security note (IPs omitted on purpose)
-- Mermaid `flowchart` or `graph` grouping Internet / OVH VPS / Home LAN (CGNAT) / Separate LAN (GUEST1)
+- Mermaid `flowchart` or `graph` grouping Internet / OVH VPS / Home LAN (CGNAT) / Separate LAN (teaching GPU host A)
 - Services and exposure edges (Tunnel+Access, Nginx DNS-only, Headscale)
 - No IP/CIDR literals
 
@@ -52,7 +52,7 @@ Create `docs/experiences/deployment-topology.md` with:
 Create `docs/experiences/deployment-topology.local.md` with:
 - Banner: do not commit / do not publish
 - Same layout as public plus IPs/CIDRs from the design table
-- Note GUEST1 not on advertised Headscale subnet
+- Note teaching GPU host A not on advertised Headscale subnet
 
 - [ ] **Step 4: Link from experiences README**
 

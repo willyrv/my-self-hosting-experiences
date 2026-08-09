@@ -1,6 +1,8 @@
-# 2026-08-09 — GPU JupyterHub on GUEST2 (3090 Ti + local CuPy image)
+# 2026-08-09 — GPU JupyterHub on teaching GPU host B (discrete NVIDIA GPU + local CuPy image)
 
-I stood up a second teaching/GPU JupyterHub box after the GUEST1 / `jupyter.willyrv.com` path. This one is **GUEST2**: fresh Ubuntu, **RTX 3090 Ti**, ~32 GB RAM, LAN around `172.16.0.131/16`. Public URL: **`https://jupyter2.willyrv.com`**.
+I stood up a second teaching/GPU JupyterHub box after the teaching GPU host A / `jupyter.willyrv.com` path. This one is **teaching GPU host B** (`<guest2-hostname>`): fresh Ubuntu, **discrete NVIDIA GPU**, ~32 GB RAM, LAN around `<guest2-lan-ip>`. Public URL: **`https://jupyter2.willyrv.com`**.
+
+Real addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ## What I wanted
 
@@ -30,15 +32,15 @@ I stood up a second teaching/GPU JupyterHub box after the GUEST1 / `jupyter.will
 - **Local images need `IfNotPresent` (or Never)** and the name must match what `k3s ctr images ls` shows — otherwise ImagePullBackOff looking for a registry.
 - **CuPy wheel matches host CUDA major** (`cupy-cuda13x` for 13.x). A working `import cupy` with `driverGetVersion() == 0` means the GPU never entered the pod; that is runtime/device-plugin/Helm, not a bad pip package.
 - **One GPU ⇒ one GPU notebook** unless I add time-slicing later. Fine for this box.
-- GUEST2 sits on `172.16.0.0/16`, which my Headscale subnet router for `192.168.1.0/24` does not cover. Tunnel access still works; VPN/SSH to this host needs Tailscale on the machine or a new advertised route.
+- Teaching GPU host B sits on `<guest-lan-cidr>`, which my Headscale subnet router for `<home-lan-cidr>` does not cover. Tunnel access still works; VPN/SSH to this host needs Tailscale on the machine or a new advertised route.
 
 ## Canonical docs
 
 I wrote the full copy-paste path as a guide (not only the app page):
 
 - [Guide: JupyterHub with GPU on k3s + Cloudflare](../guides/jupyterhub-gpu-k3s-cloudflare.md)
-- [JupyterHub app notes](../apps/jupyterhub.md) (GUEST1 teaching stack + GPU section)
-- Earlier: [2026-07-22 JupyterHub + Tunnel (+ GPU on guest1)](2026-07-22-jupyterhub-cloudflare-tunnel.md)
+- [JupyterHub app notes](../apps/jupyterhub.md) (teaching GPU host A stack + GPU section)
+- Earlier: [2026-07-22 JupyterHub + Tunnel (+ GPU on teaching GPU host A)](2026-07-22-jupyterhub-cloudflare-tunnel.md)
 
 ## Decision
 
@@ -46,7 +48,7 @@ Keep **two** public Hub URLs for now:
 
 | Host | URL | Role |
 |------|-----|------|
-| GUEST1 | `jupyter.willyrv.com` | Larger RAM/CPU teaching box (4090 path documented earlier) |
-| GUEST2 | `jupyter2.willyrv.com` | Fresh GPU box; local CuPy image; 3090 Ti |
+| Teaching GPU host A (`<guest1-hostname>`) | `jupyter.willyrv.com` | Larger RAM/CPU teaching box (NVIDIA GPU path documented earlier) |
+| Teaching GPU host B (`<guest2-hostname>`) | `jupyter2.willyrv.com` | Fresh GPU box; local CuPy image; discrete NVIDIA GPU |
 
 Bake GPU Python stacks into a **local** image imported into k3s when I do not want a private registry. Put secrets and tunnel tokens only on the host, never in git.

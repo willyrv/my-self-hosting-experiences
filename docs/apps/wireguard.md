@@ -24,7 +24,7 @@ Keeping the VPN outside K3s ensures that cluster failures do not also remove rem
 
 ## WireGuard or Headscale
 
-This lab chose **[Headscale](headscale.md)** (Tailscale clients + self-hosted control server) after discovering **IPv4 CGNAT** on the domestic ISP line. The control plane runs on an OVH VPS behind Nginx; the home PC acts as a subnet router for `192.168.1.0/24`.
+This lab chose **[Headscale](headscale.md)** (Tailscale clients + self-hosted control server) after discovering **IPv4 CGNAT** on the domestic ISP line. The control plane runs on an OVH VPS behind Nginx; the home PC acts as a subnet router for `<home-lan-cidr>`. Real LAN addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 Plain WireGuard remains a valid alternative when:
 

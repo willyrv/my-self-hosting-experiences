@@ -55,7 +55,7 @@
 - [ ] **Step 1: Add the original architecture note to git tracking**
 
 ```bash
-cd /home/willy/hosting/my-self-hosting-experiences
+cd <repo-root>
 git add self_hosting_k3s_architecture.md
 ```
 

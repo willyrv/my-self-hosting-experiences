@@ -40,7 +40,7 @@ OVH VPS
       └── journalctl -u headscale → auth/registration failure alerts
 
 Home PC
-└── Tailscale always on + subnet router 192.168.1.0/24
+└── Tailscale always on + subnet router <home-lan-cidr>
 ```
 
 ## Component design

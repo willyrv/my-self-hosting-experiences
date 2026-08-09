@@ -51,7 +51,7 @@ K3s ServiceLB may be enough initially. MetalLB is an alternative when services n
 
 ## Private access
 
-This lab uses **[Headscale](../apps/headscale.md)** for mesh VPN and home LAN access. Because the domestic ISP uses **IPv4 CGNAT**, the control plane runs on an OVH VPS behind Nginx (DNS-only Cloudflare hostname); the home PC joins as a subnet router for `192.168.1.0/24`. Plain [WireGuard](../apps/wireguard.md) remains an alternative when inbound home port forwards are available. See [Phase 2 — VPN access](../guides/phase-02-vpn-access.md).
+This lab uses **[Headscale](../apps/headscale.md)** for mesh VPN and home LAN access. Because the domestic ISP uses **IPv4 CGNAT**, the control plane runs on an OVH VPS behind Nginx (DNS-only Cloudflare hostname); the home PC joins as a subnet router for `<home-lan-cidr>`. Plain [WireGuard](../apps/wireguard.md) remains an alternative when inbound home port forwards are available. See [Phase 2 — VPN access](../guides/phase-02-vpn-access.md). Real LAN addresses live in gitignored `docs/inventory.local.md` and `docs/experiences/deployment-topology.local.md`.
 
 ## Cloudflare Tunnel and Access (alternate gate)
 

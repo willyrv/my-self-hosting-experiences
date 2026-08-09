@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Bring up Headscale on the existing Ubuntu Server PC at `https://headscale.willyrv.com` with native Let’s Encrypt, Cloudflare DNS-only + DDNS, mesh VPN, and subnet routing for `192.168.1.0/24`, then document it in this repository.
+**Goal:** Bring up Headscale on the existing Ubuntu Server PC at `https://headscale.willyrv.com` with native Let’s Encrypt, Cloudflare DNS-only + DDNS, mesh VPN, and subnet routing for `<home-lan-cidr>`, then document it in this repository.
 
-**Architecture:** Single home node terminates TLS itself (no reverse proxy). Cloudflare grey-cloud A record tracks a dynamic public IP. Router forwards TCP 443, UDP 41641, and UDP 3478. Embedded DERP + STUN; host advertises `192.168.1.0/24`. Official Tailscale clients use `--login-server=https://headscale.willyrv.com`.
+**Architecture:** Single home node terminates TLS itself (no reverse proxy). Cloudflare grey-cloud A record tracks a dynamic public IP. Router forwards TCP 443, UDP 41641, and UDP 3478. Embedded DERP + STUN; host advertises `<home-lan-cidr>`. Official Tailscale clients use `--login-server=https://headscale.willyrv.com`.
 
 **Tech Stack:** Headscale (DEB preferred), Tailscale clients, Cloudflare DNS API DDNS, Ubuntu Server firewall (`ufw` or `nftables`), systemd.
 
@@ -14,7 +14,7 @@
 - Cloudflare: **DNS only** (grey cloud). Never Proxy or Tunnel for Headscale.
 - TLS: Headscale native Let’s Encrypt; **no reverse proxy**.
 - Challenge type: `TLS-ALPN-01` with `listen_addr: 0.0.0.0:443` (avoids needing WAN TCP 80).
-- LAN route to advertise: `192.168.1.0/24`.
+- LAN route to advertise: `<home-lan-cidr>`.
 - WireGuard client/default port assumption: UDP `41641` (`randomize_client_port: false`).
 - STUN for embedded DERP: UDP `3478`.
 - MagicDNS `dns.base_domain` must **differ** from the Headscale hostname domain — use `ts.willyrv.com` (or another unused subdomain under `willyrv.com`).
@@ -320,19 +320,19 @@ Re-check in Cloudflare UI that the record is still DNS-only after DDNS runs.
 
 ---
 
-### Task 4: User, server node, and subnet router `192.168.1.0/24`
+### Task 4: User, server node, and subnet router `<home-lan-cidr>`
 
 **Files:**
 - Host networking (`sysctl`), Tailscale client on the Headscale PC
 
 **Interfaces:**
 - Consumes: healthy Headscale from Task 2
-- Produces: approved route `192.168.1.0/24` via the server node
+- Produces: approved route `<home-lan-cidr>` via the server node
 
 - [ ] **Step 1: Create Headscale user**
 
 ```bash
-sudo headscale users create willy
+sudo headscale users create <headscale-user>
 sudo headscale users list
 ```
 
@@ -351,16 +351,16 @@ Expected: `net.ipv4.ip_forward = 1`
 
 ```bash
 curl -fsSL https://tailscale.com/install.sh | sh
-sudo headscale preauthkeys create --user willy --reusable --expiration 24h
+sudo headscale preauthkeys create --user <headscale-user> --reusable --expiration 24h
 ```
 
-Replace `willy` with the user id/name your CLI expects (`headscale preauthkeys create --help`).
+Replace `<headscale-user>` with the user id/name your CLI expects (`headscale preauthkeys create --help`).
 
 ```bash
 sudo tailscale up \
   --login-server=https://headscale.willyrv.com \
   --authkey=YOUR_PREAUTH_KEY \
-  --advertise-routes=192.168.1.0/24 \
+  --advertise-routes=<home-lan-cidr> \
   --accept-dns=false
 sudo tailscale status
 ```
@@ -374,18 +374,18 @@ sudo headscale nodes list
 sudo headscale routes list
 ```
 
-Enable/approve the `192.168.1.0/24` route for the server node using the commands shown by your Headscale version (`headscale routes --help` or `headscale nodes approve-routes --help`).
+Enable/approve the `<home-lan-cidr>` route for the server node using the commands shown by your Headscale version (`headscale routes --help` or `headscale nodes approve-routes --help`).
 
 Example pattern (v0.22-style; prefer `--help` on your build):
 
 ```bash
 sudo headscale routes enable -r ROUTE_ID
 # or:
-# sudo headscale nodes approve-routes --identifier NODE_ID --routes 192.168.1.0/24
+# sudo headscale nodes approve-routes --identifier NODE_ID --routes <home-lan-cidr>
 sudo headscale routes list
 ```
 
-Expected: route `192.168.1.0/24` listed as enabled/approved.
+Expected: route `<home-lan-cidr>` listed as enabled/approved.
 
 - [ ] **Step 5: Confirm LAN side**
 
@@ -393,7 +393,7 @@ From the Headscale host:
 
 ```bash
 ip route | head
-ping -c 2 192.168.1.1 || true
+ping -c 2 <home-gateway-ip> || true
 ```
 
 ---
@@ -404,7 +404,7 @@ ping -c 2 192.168.1.1 || true
 
 **Interfaces:**
 - Consumes: approved subnet route from Task 4
-- Produces: proof that an off-LAN client can reach `192.168.1.0/24`
+- Produces: proof that an off-LAN client can reach `<home-lan-cidr>`
 
 - [ ] **Step 1: Enroll a laptop or phone outside the home Wi-Fi/LAN**
 
@@ -423,7 +423,7 @@ Approve/register the node if using interactive auth:
 
 ```bash
 sudo headscale nodes list
-# sudo headscale auth register --user willy --auth-id <AUTH_ID>   # if required by version
+# sudo headscale auth register --user <headscale-user> --auth-id <AUTH_ID>   # if required by version
 ```
 
 - [ ] **Step 2: Verify mesh**
@@ -441,7 +441,7 @@ Expected: Headscale server node visible/online.
 From the remote client, reach a known LAN host (router or another PC):
 
 ```bash
-ping -c 3 192.168.1.1
+ping -c 3 <home-gateway-ip>
 # or SSH to a LAN host you control
 ```
 
@@ -476,7 +476,7 @@ Status: In progress → Recommended (once verified)
 
 ## Purpose
 
-Self-hosted Tailscale control server for mesh VPN between personal devices and access to the home LAN (`192.168.1.0/24`).
+Self-hosted Tailscale control server for mesh VPN between personal devices and access to the home LAN (`<home-lan-cidr>`).
 
 ## Placement
 
@@ -487,7 +487,7 @@ Run on the Ubuntu infrastructure host (not in Kubernetes), with native TLS on `h
 - Cloudflare DNS-only (never Proxy/Tunnel)
 - Headscale terminates Let’s Encrypt (`TLS-ALPN-01`, listen `:443`)
 - Embedded DERP + STUN UDP 3478
-- Subnet router advertises `192.168.1.0/24`
+- Subnet router advertises `<home-lan-cidr>`
 - DDNS via Cloudflare API on the host
 
 ## Ports
@@ -587,9 +587,9 @@ git push origin HEAD
 
 ## Self-review (plan author)
 
-1. **Spec coverage:** DNS-only Cloudflare, native ACME, ports, DDNS, subnet `192.168.1.0/24`, client enrollment, docs updates, no secrets — mapped to Tasks 1–7. TLS-ALPN-01 chosen so WAN TCP 80 is not required (consistent with design port list).
+1. **Spec coverage:** DNS-only Cloudflare, native ACME, ports, DDNS, subnet `<home-lan-cidr>`, client enrollment, docs updates, no secrets — mapped to Tasks 1–7. TLS-ALPN-01 chosen so WAN TCP 80 is not required (consistent with design port list).
 2. **Placeholder scan:** Operator-specific values marked (`YOUR_EMAIL`, keys, LAN IP); no TBD steps.
-3. **Consistency:** Hostname `headscale.willyrv.com`, MagicDNS base `ts.willyrv.com`, route `192.168.1.0/24` used throughout.
+3. **Consistency:** Hostname `headscale.willyrv.com`, MagicDNS base `ts.willyrv.com`, route `<home-lan-cidr>` used throughout.
 
 ## Execution handoff
 
