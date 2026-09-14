@@ -1,5 +1,7 @@
 # Matomo on single-node K3s + Cloudflare Tunnel Implementation Plan
 
+> **Manual install (human on host A):** copy-paste runbook is [`docs/guides/matomo-k3s-cloudflare.md`](../../guides/matomo-k3s-cloudflare.md). Use that file in a terminal; this plan is the agent-oriented task breakdown.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Deploy Matomo On-Premise on teaching GPU host A’s existing single-node K3s cluster with MariaDB, a report-archive CronJob, Cloudflare Tunnel, and a split Access gate (public tracking, Access-protected dashboard), then update the handbook to match.
@@ -24,7 +26,7 @@
 - No Traefik / cert-manager / Flux / SOPS / paid plugins / GA import / Tag Manager project in v1.
 - This docs repo remains documentation-first: runbook YAML uses secret **names**, not values. Do not add a live GitOps `clusters/` tree.
 - Pin image tags discovered at install time into the handbook.
-- `./scripts/verify-docs.sh` must pass after handbook edits. Do not add private IPs, private hostnames, `/home/willy`, or operator emails to tracked markdown.
+- `./scripts/verify-docs.sh` must pass after handbook edits. Do not add private IPs, private hostnames, operator home directories, or operator emails to tracked markdown.
 
 ## File Structure
 
