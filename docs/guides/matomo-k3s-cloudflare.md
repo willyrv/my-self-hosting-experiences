@@ -1,13 +1,14 @@
 # Guide — Matomo on k3s + Cloudflare Tunnel (manual install)
 
-Status: Planned (commands ready; not yet lived in this lab)  
+Status: Lived (installed 2026-09-28 on teaching GPU host A)  
 Audience: You, on **teaching GPU host A**, in a terminal where `kubectl` talks to that cluster.
 
 This is the copy-paste runbook. Run the commands **on host A** (or any machine whose kubeconfig is that cluster). Do not run them against the OpenProject mini PC.
 
 Public URL: `https://webanalytics.willyrv.com`  
 Design: [2026-09-14 spec](../superpowers/specs/2026-09-14-matomo-k3s-cloudflare-design.md)  
-Agent plan: [2026-09-14 plan](../superpowers/plans/2026-09-14-matomo-k3s-cloudflare.md)
+Agent plan: [2026-09-14 plan](../superpowers/plans/2026-09-14-matomo-k3s-cloudflare.md)  
+Experience: [2026-09-28 install](../experiences/2026-09-28-matomo-k3s-cloudflare.md)
 
 Never put tunnel tokens, DB passwords, or `config.ini.php` in git.
 
@@ -287,7 +288,7 @@ Then `kubectl -n matomo rollout status statefulset/matomo-mariadb --timeout=5m`.
 SQL smoke test:
 
 ```bash
-kubectl -n matomo run mysql-smoke --rm --restart=Never \
+kubectl -n matomo run mysql-smoke --rm -it --restart=Never \
   --image="${MARIADB_IMAGE}" \
   --env="MYSQL_PWD=$(cat ~/secrets/matomo-db-password.txt)" \
   --command -- mariadb -h matomo-mariadb -u matomo matomo -e 'SELECT 1 AS ok;'
@@ -717,13 +718,17 @@ Keep together: dump, `config.ini.php`, both DB passwords, tunnel token. Cluster 
 [ ] ~/secrets has dump + config.ini.php + passwords + tunnel token
 ```
 
-When that list is true, tell me what happened (including CronJob vs sidecar and any probe/image tweaks). I will then update `docs/apps/matomo.md`, topology, and the dated experience log.
+Lived install: [2026-09-28 experience](../experiences/2026-09-28-matomo-k3s-cloudflare.md). Handbook: [Matomo](../apps/matomo.md). If you kept the archive sidecar instead of the CronJob, note that next to this checklist.
 
 ---
 
 ## Troubleshooting
 
 **Wrong cluster.** `kubectl get ns` missing n8n/Jupyter → change kubeconfig.
+
+**Smoke test: `--rm` should only be used for attached containers.** The `kubectl run` command needs `-it` as well as `--rm`.
+
+**Smoke test: pod `mysql-smoke` already exists.** A failed attempt leaves the pod behind. `kubectl -n matomo delete pod mysql-smoke --wait=true`, then run the smoke test again.
 
 **MariaDB not Ready.** `kubectl -n matomo describe pod matomo-mariadb-0` and `logs`. PVC Pending usually means StorageClass / disk. Probe errors → switch to `tcpSocket` port 3306.
 

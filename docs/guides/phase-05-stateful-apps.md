@@ -22,6 +22,8 @@ Deploy OpenProject on the application/compute node (validated: single-node k3s o
 
 Use JupyterHub when several users or isolated environments justify it (validated: teaching stack for three students on a large single-node k3s host at `jupyter.willyrv.com` via Cloudflare Tunnel + Access; second GPU box at `jupyter2.willyrv.com` on teaching GPU host B with a local CuPy image). A single trusted user may only need JupyterLab. Set CPU and memory guarantees and limits, and separate persistent home directories from disposable computation. With home CGNAT, prefer Tunnel + Access for the public classroom URL; use Headscale/VPN for private admin when the host is on a routed LAN. NFS, local SSD, or Longhorn can hold homes according to availability needs. See [JupyterHub](../apps/jupyterhub.md) and the full GPU walkthrough [JupyterHub with GPU on k3s + Cloudflare](jupyterhub-gpu-k3s-cloudflare.md).
 
+Matomo on the same host A cluster is a smaller stateful pair: official Matomo and MariaDB images, two PVCs, and a Cloudflare Tunnel. The dashboard is Access-gated; the tracker paths stay public. See [Matomo](../apps/matomo.md) and the [Matomo k3s + Cloudflare guide](matomo-k3s-cloudflare.md).
+
 Choose Nextcloud for a broad collaboration platform or Seafile for focused file synchronization and a lighter footprint. Place user files on NFS or dedicated local storage and databases on SSD-backed storage. Confirm that user files remain recoverable without a running cluster.
 
 For every application, finish a restore test before moving to the next. Replication and volume snapshots are not sufficient backups: use application-aware exports or logical database dumps alongside file or volume backups, with an independent copy outside the cluster.
@@ -40,6 +42,8 @@ For every application, finish a restore test before moving to the next. Replicat
 - [OpenProject](../apps/openproject.md)
 - [JupyterHub](../apps/jupyterhub.md)
 - [JupyterHub with GPU on k3s + Cloudflare](jupyterhub-gpu-k3s-cloudflare.md)
+- [Matomo](../apps/matomo.md)
+- [Matomo on k3s + Cloudflare](matomo-k3s-cloudflare.md)
 - [Nextcloud or Seafile](../apps/cloud-nextcloud-seafile.md)
 - [Backup design](../architecture/backups.md)
 - [Storage strategy](../architecture/storage.md)

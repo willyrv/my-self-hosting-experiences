@@ -29,6 +29,7 @@ required_files=(
   docs/guides/phase-06-media-and-git.md
   docs/guides/phase-07-operations.md
   docs/guides/jupyterhub-gpu-k3s-cloudflare.md
+  docs/guides/matomo-k3s-cloudflare.md
   docs/apps/openproject.md
   docs/apps/jellyfin.md
   docs/apps/cloud-nextcloud-seafile.md
@@ -39,6 +40,7 @@ required_files=(
   docs/apps/jupyterhub.md
   docs/apps/gitlab-or-forgejo.md
   docs/apps/n8n.md
+  docs/apps/matomo.md
   docs/experiences/README.md
   docs/experiences/2026-07-18-architecture-decision.md
   docs/experiences/2026-07-19-headscale-ovh-cgnat.md
@@ -46,6 +48,7 @@ required_files=(
   docs/experiences/2026-07-22-openproject-cloudflare-tunnel.md
   docs/experiences/2026-07-22-jupyterhub-cloudflare-tunnel.md
   docs/experiences/2026-08-09-jupyterhub-gpu-guest2.md
+  docs/experiences/2026-09-28-matomo-k3s-cloudflare.md
 )
 
 missing=0

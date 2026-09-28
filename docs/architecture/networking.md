@@ -57,6 +57,8 @@ This lab uses **[Headscale](../apps/headscale.md)** for mesh VPN and home LAN ac
 
 For selected applications (starting with [n8n](../apps/n8n.md)), Cloudflare Tunnel can publish HTTPS without opening inbound ports on the homelab. Cloudflare Access then enforces allowlisted users on the editor UI. This complements host-level WireGuard: WireGuard remains the break-glass admin path when the cluster or Cloudflare path is unavailable; Tunnel + Access is acceptable for app UIs that should not use Traefik/cert-manager public Ingress on day one.
 
+[Matomo](../apps/matomo.md) uses the same Tunnel pattern on `webanalytics.willyrv.com`, with one split: the dashboard is behind Access, and `/matomo.js`, `/matomo.php`, `/piwik.js`, and `/piwik.php` Bypass Access so public sites can send hits. Leave Tunnel **Protect with Access** off for that hostname.
+
 ## Exposure policy
 
 Classify each service before deployment.

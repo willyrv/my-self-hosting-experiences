@@ -50,6 +50,7 @@ Recommended shape of this lab:
 - [JupyterHub](docs/apps/jupyterhub.md) · [GPU + Tunnel walkthrough](docs/guides/jupyterhub-gpu-k3s-cloudflare.md)
 - [GitLab or Forgejo/Gitea](docs/apps/gitlab-or-forgejo.md)
 - [n8n](docs/apps/n8n.md) (single-node K3s + Cloudflare Tunnel)
+- [Matomo](docs/apps/matomo.md) · [k3s + Tunnel walkthrough](docs/guides/matomo-k3s-cloudflare.md)
 
 ## Useful resources
 

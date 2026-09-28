@@ -17,6 +17,7 @@ That public page **omits IPs, CIDRs, and private hostnames** on purpose. Real ad
 
 ## Entries
 
+- [2026-09-28 — Matomo on single-node k3s with Cloudflare Tunnel](2026-09-28-matomo-k3s-cloudflare.md)
 - [2026-08-09 — GPU JupyterHub on teaching GPU host B (discrete NVIDIA GPU + local CuPy)](2026-08-09-jupyterhub-gpu-guest2.md)
 - [2026-07-31 — n8n on single-node K3s with Cloudflare Tunnel](2026-07-31-n8n-k3s-cloudflare.md)
 - [2026-07-22 — JupyterHub teaching stack + Cloudflare Tunnel (+ GPU)](2026-07-22-jupyterhub-cloudflare-tunnel.md)
