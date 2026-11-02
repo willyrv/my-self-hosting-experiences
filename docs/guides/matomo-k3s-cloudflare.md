@@ -203,6 +203,8 @@ spec:
         app: matomo-mariadb
     spec:
       securityContext:
+        runAsUser: 999
+        runAsGroup: 999
         fsGroup: 999
       containers:
         - name: mariadb
@@ -730,7 +732,7 @@ Lived install: [2026-09-28 experience](../experiences/2026-09-28-matomo-k3s-clou
 
 **Smoke test: pod `mysql-smoke` already exists.** A failed attempt leaves the pod behind. `kubectl -n matomo delete pod mysql-smoke --wait=true`, then run the smoke test again.
 
-**MariaDB not Ready.** `kubectl -n matomo describe pod matomo-mariadb-0` and `logs`. PVC Pending usually means StorageClass / disk. Probe errors → switch to `tcpSocket` port 3306.
+**MariaDB not Ready.** `kubectl -n matomo describe pod matomo-mariadb-0` and `logs`. PVC Pending usually means StorageClass / disk. Probe errors → switch to `tcpSocket` port 3306. If the log stops at `Switching to dedicated user 'mysql'` and `gosu` uses a full CPU, the pod is still root. `runAsUser` and `runAsGroup` must both be `999` so the entrypoint does not call `gosu`.
 
 **Matomo cannot reach DB.** Wizard host must be `matomo-mariadb`, not `localhost`. Secret keys must be `database` / `username` / `password`.
 
