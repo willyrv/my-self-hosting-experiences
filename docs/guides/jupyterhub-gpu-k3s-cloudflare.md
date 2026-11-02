@@ -446,4 +446,5 @@ Editing `values.yaml` alone does **not** change the cluster — always `helm upg
 - [OpenProject + Tunnel](../apps/openproject.md) — same edge pattern
 - [Headscale](../apps/headscale.md) — VPN / CGNAT
 - [Experience: GPU JupyterHub on teaching GPU host B](../experiences/2026-08-09-jupyterhub-gpu-guest2.md)
+- [Open WebUI on this host](openwebui-k3s-cloudflare.md) — planned chat UI, no GPU request
 - Upstream Z2JH: https://z2jh.jupyter.org/

@@ -51,6 +51,7 @@ Recommended shape of this lab:
 - [GitLab or Forgejo/Gitea](docs/apps/gitlab-or-forgejo.md)
 - [n8n](docs/apps/n8n.md) (single-node K3s + Cloudflare Tunnel)
 - [Matomo](docs/apps/matomo.md) · [k3s + Tunnel walkthrough](docs/guides/matomo-k3s-cloudflare.md)
+- [Open WebUI](docs/apps/openwebui.md) · [k3s + Tunnel walkthrough](docs/guides/openwebui-k3s-cloudflare.md) (planned, teaching GPU host B)
 
 ## Useful resources
 

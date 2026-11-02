@@ -8,6 +8,7 @@ Documentation for a hybrid K3s homelab on two or three machines: public handbook
 - [Implementation phases](guides/phase-01-base-os.md) — build order
 - [JupyterHub GPU guide](guides/jupyterhub-gpu-k3s-cloudflare.md) — k3s + Tunnel + local CuPy image
 - [Matomo guide](guides/matomo-k3s-cloudflare.md) — k3s + Tunnel, public tracker, Access on the dashboard
+- [Open WebUI guide](guides/openwebui-k3s-cloudflare.md) — k3s on teaching GPU host B + Tunnel + Access
 - [Experiences log](experiences/README.md) — decisions and experiments
 
 ## Browse
